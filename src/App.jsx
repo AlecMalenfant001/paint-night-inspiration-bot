@@ -45,7 +45,10 @@ function App() {
       <ThemeProvider theme={theme}>
         {/*Wrapper*/}
         <Container
-          sx={{ bgcolor: theme.palette.secondary.main, height: "100vh" }}
+          sx={{
+            bgcolor: theme.palette.secondary.main,
+            height: "100%",
+          }}
           disableGutters
         >
           {/*Title Bar*/}
@@ -76,10 +79,6 @@ function App() {
                 mx: 2,
               }}
             >
-              <GeminiTestButton />
-              <AzureTestButton />
-              <GetImgTestButton prompt="A cat in a hat" />
-
               {/*Source Image*/}
               <ReferenceImagePaper />
               {/*Keywords*/}
@@ -105,6 +104,9 @@ function App() {
                 </Button>
               </Box>
               <ImageGrid imageUrls={imageUrls} />
+              <GeminiTestButton />
+              <AzureTestButton />
+              <GetImgTestButton prompt="A cat in a hat" />
             </Box>
           </Stack>
         </Container>
