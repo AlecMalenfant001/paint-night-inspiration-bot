@@ -46,6 +46,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       setLoading(false); // Set loading to false
     } catch (error) {
       console.error("Error fetching image:", error);
+      setLoading(false); // Set loading to false
       return null; // Or handle the error differently
     }
   }
