@@ -21,10 +21,14 @@ const style = {
 export default function AddKeywordButton({ addKeywordFunction }) {
   const [open, setOpen] = React.useState(false);
   const [keyword, setKeyword] = React.useState("");
+  const textFieldRef = React.useRef(null);
 
   const handleOpen = () => {
     setKeyword("");
     setOpen(true);
+    setTimeout(() => {
+      textFieldRef.current.focus();
+    }, 0);
   };
   const handleClose = () => setOpen(false);
   const handleKeywordChange = (event) => setKeyword(event.target.value);
@@ -63,6 +67,7 @@ export default function AddKeywordButton({ addKeywordFunction }) {
             onChange={handleKeywordChange}
             margin="normal"
             onKeyDown={handleKeyPress}
+            inputRef={textFieldRef}
           />
           <Button
             variant="contained"
