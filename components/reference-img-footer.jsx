@@ -10,20 +10,20 @@ export default function ReferenceImageFooter(props) {
     <>
       <Box sx={{ marginTop: 2 }}>
         {/*Headers*/}
-        <Grid container spacing={2} columns={10}>
-          <Grid size={7}>
+        <Grid container spacing={1} columns={10}>
+          <Grid size={{ xs: 5, sm: 7 }}>
             <Typography variant="h6">Description</Typography>
           </Grid>
-          <Grid size={3}>
+          <Grid size={{ xs: 5, sm: 3 }}>
             <Typography variant="h6">Confidence</Typography>
           </Grid>
         </Grid>
         {/*Content*/}
-        <Grid container spacing={2} columns={10}>
-          <Grid size={7}>
+        <Grid container spacing={1} columns={10}>
+          <Grid size={{ xs: 5, sm: 7 }}>
             <Typography variant="body1">{props.description}</Typography>
           </Grid>
-          <Grid size={3}>
+          <Grid size={{ xs: 5, sm: 3 }}>
             <ConfidenceCircle value={props.confidence} />
           </Grid>
         </Grid>
