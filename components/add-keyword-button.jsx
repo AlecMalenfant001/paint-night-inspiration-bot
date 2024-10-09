@@ -22,7 +22,10 @@ export default function AddKeywordButton({ addKeywordFunction }) {
   const [open, setOpen] = React.useState(false);
   const [keyword, setKeyword] = React.useState("");
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setKeyword("");
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   const handleKeywordChange = (event) => setKeyword(event.target.value);
   const handleSubmit = () => {
