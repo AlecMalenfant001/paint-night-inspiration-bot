@@ -12,13 +12,7 @@ const ListItem = styled("li")(({ theme }) => ({
 }));
 
 export default function ChipsArray() {
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: "Angular" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 3, label: "React" },
-    { key: 4, label: "Vue.js" },
-  ]);
+  const [chipData, setChipData] = React.useState([]);
 
   const handleAdd = (chipToAdd) => {
     setChipData((chips) => [...chips, { key: chips.length, label: chipToAdd }]);
