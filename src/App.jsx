@@ -42,7 +42,7 @@ function App() {
 
   const handleAddImage = (newUrl) => {
     console.log([...imageUrls, newUrl]);
-    setImageUrls((imageUrls) => [...imageUrls, newUrl]);
+    setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
   };
 
   return (
