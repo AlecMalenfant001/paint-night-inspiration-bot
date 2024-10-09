@@ -15,25 +15,33 @@ I have been slowly but surely chugging away at UI development. The page and it's
 
 <br/>These are the buttons that **do** work :
 
-- All 3 buttons to test the API
 - Upload image button
+- Generate image
 - Add keyword button
 
 These are the buttons that **do not** work :
 
-- Generate image
+- Upload image
 - Login
+
+You'll notice that Upload image is on both of these lists. This is because right now we have no way of sending a locally uploaded file to
+the Azure image description API. First we need to setup the databse, then store the file, and send the API the link to that file. However,
+the upload image button still causes the image description and confidence to render. Also, because the Azure API is still hard coded to a single image
+url, the description and confidence will be the same every time.
+
+Also, the prompt for the generate image button is still "a cat in a hat"
 
 ## Next Steps
 
 The next steps are to:
 
 - Integrate Nadeem's clerk code into this project
-- Add image description + confidence to the bottom of the reference image modal
-- Make 'Generate Image' button work
-- Remove Test API buttons
-- Maybe replace the image carousel with an image list. I think that could look better with lots of images on a wider screen
-- Store Images for logged in users
+- Store ALL uploaded images so we can have a URL to send to Azure
+- Delete all uploaded images after a short amount of time for privacy
+- Turn the image description + keywords into a prompt for Gemini
+- Feed Gemini output to Getimg api
+- Store Generated Images for logged in users
+- About Page
 - Deploy
 
 # Quick Start
