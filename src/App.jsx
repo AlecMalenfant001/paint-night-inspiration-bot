@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { pink, purple } from "@mui/material/colors";
 import ReferenceImagePaper from "../components/reference-image-paper";
 import ImageGrid from "../components/image-grid";
+import GenerateImageButton from "../components/generate-img-button";
 
 const theme = createTheme({
   palette: {
@@ -31,14 +32,18 @@ const theme = createTheme({
 });
 
 function App() {
-  const [count, setCount] = useState(0);
-  const imageUrls = [
+  const [imageUrls, setImageUrls] = useState([
     "basquiatMoose.png",
     "frog2.png",
     "Glitch.png",
     "guillotine.png",
     "haringMoose.png",
-  ];
+  ]);
+
+  const handleAddImage = (newUrl) => {
+    console.log([...imageUrls, newUrl]);
+    setImageUrls((imageUrls) => [...imageUrls, newUrl]);
+  };
 
   return (
     <>
@@ -99,9 +104,7 @@ function App() {
                   width: "100%",
                 }}
               >
-                <Button sx={{ m: 2 }} variant="contained">
-                  Generate Image
-                </Button>
+                <GenerateImageButton addImgUrlFunc={handleAddImage} />
               </Box>
               <ImageGrid imageUrls={imageUrls} />
               <GeminiTestButton />

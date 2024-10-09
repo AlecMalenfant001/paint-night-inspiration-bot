@@ -17,12 +17,7 @@ export default function ImageGrid(props) {
     <ImageList sx={{ w: "100%" }} cols={cols}>
       {imageUrls.map((imageUrl, index) => (
         <ImageListItem key={index}>
-          <img
-            srcSet={`${imageUrl}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            src={`${imageUrl}?w=164&h=164&fit=crop&auto=format`}
-            alt={imageUrl}
-            loading="lazy"
-          />
+          <img src={imageUrl} alt={imageUrl} loading="lazy" />
         </ImageListItem>
       ))}
     </ImageList>
