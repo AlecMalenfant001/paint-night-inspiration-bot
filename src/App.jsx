@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { pink, purple } from "@mui/material/colors";
-import SourceImagePaper from "../components/source-image-paper";
+import ReferenceImagePaper from "../components/reference-image-paper";
 
 const theme = createTheme({
   palette: {
@@ -80,7 +80,7 @@ function App() {
               <GetImgTestButton prompt="A cat in a hat" />
 
               {/*Source Image*/}
-              <SourceImagePaper />
+              <ReferenceImagePaper />
               {/*Keywords*/}
               <ChipsArray />
             </Box>
