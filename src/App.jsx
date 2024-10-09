@@ -108,8 +108,6 @@ function App() {
               </Box>
               <ImageGrid imageUrls={imageUrls} />
               <GeminiTestButton />
-              <AzureTestButton />
-              <GetImgTestButton prompt="A cat in a hat" />
             </Box>
           </Stack>
         </Container>
