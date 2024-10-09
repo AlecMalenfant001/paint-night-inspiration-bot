@@ -17,6 +17,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material";
 import { pink, purple } from "@mui/material/colors";
 import ReferenceImagePaper from "../components/reference-image-paper";
+import ImageGrid from "../components/image-grid";
 
 const theme = createTheme({
   palette: {
@@ -103,7 +104,7 @@ function App() {
                   Generate Image
                 </Button>
               </Box>
-              <ImageCarousel imageUrls={imageUrls} />
+              <ImageGrid imageUrls={imageUrls} />
             </Box>
           </Stack>
         </Container>
