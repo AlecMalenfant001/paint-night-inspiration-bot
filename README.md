@@ -60,10 +60,12 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @mui/material @emotion/react @emotion/styled
   npm install @mui/icons-material
   npm install @fontsource/roboto
+  npm install mongodb
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
 - mui is a component library called 'Material UI'
+- mongodb is a database used for storing images
 
 ## API Key Environment Variables
 
