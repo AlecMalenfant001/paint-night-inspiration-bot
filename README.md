@@ -60,6 +60,7 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @mui/material @emotion/react @emotion/styled
   npm install @mui/icons-material
   npm install @fontsource/roboto
+  npm install @clerk/clerk-react
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
@@ -74,6 +75,7 @@ If no such file exist, create that file and create value-key pairs with the foll
 VITE_GEMINI_API_KEY="YOUR-KEY"
 VITE_AZURE_VISION_KEY="YOUR-KEY"
 VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
+VITE_CLERK_PUBLISHABLE_KEY="YOUR KEY"
 ```
 
 ## Start Development Server
