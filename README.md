@@ -61,13 +61,11 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @mui/icons-material
   npm install @fontsource/roboto
   npm install @azure/storage-blob
-  npm install buffer
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
 - mui is a component library called 'Material UI'
 - azure/storage-blob is used to store reference images
-- buffer is polyfill because the buffer is normally rendered server side
 
 ## API Key Environment Variables
 
