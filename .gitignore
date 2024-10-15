@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 
 # Environment Variables
+*.env
 *.local
+
+# Misc
+*.cjs

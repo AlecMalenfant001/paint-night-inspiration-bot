@@ -11,42 +11,21 @@ After hitting the “generate” button, the program will return a description o
 
 # Current State of Development
 
-I have been slowly but surely chugging away at UI development. The page and it's components are responsive to change in screen size.
-
-<br/>These are the buttons that **do** work :
-
-- Upload image button
-- Generate image
-- Add keyword button
-
-These are the buttons that **do not** work :
-
-- Upload image
-- Login
-
-You'll notice that Upload image is on both of these lists. This is because right now we have no way of sending a locally uploaded file to
-the Azure image description API. First we need to setup the databse, then store the file, and send the API the link to that file. However,
-the upload image button still causes the image description and confidence to render. Also, because the Azure API is still hard coded to a single image
-url, the description and confidence will be the same every time.
-
-Also, the prompt for the generate image button is still "a cat in a hat"
+With this update the uploaded reference image is now sent to the image description API. The state of the description component now updates to match the returned description. Currently, there is a file size limit of 4MB.
 
 ## Next Steps
 
 The next steps are to:
 
-- Integrate Nadeem's clerk code into this project
-- Store ALL uploaded images so we can have a URL to send to Azure
-- Delete all uploaded images after a short amount of time for privacy
-- Turn the image description + keywords into a prompt for Gemini
-- Feed Gemini output to Getimg api
-- Store Generated Images for logged in users
+- Pass image description + keywords to gemini api
+- Pass gemini output to get-img api
+- Store generated images for logged in users
 - About Page
 - Deploy
 
 # Quick Start
 
-## Dependencies
+## Front End Dependencies
 
 Install the needed dependencies by running these commands in the terminal :
 
@@ -61,12 +40,42 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @mui/icons-material
   npm install @fontsource/roboto
   npm install @clerk/clerk-react
+  npm install @azure/storage-blob
+  npm install axios
+  npm install multer
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
 - mui is a component library called 'Material UI'
+- azure/storage-blob is used to store reference images
+- axios is an HTTP client for node.js
+- multer is middleware to help with form data
+
+## /server/server.js
+
+This server's repsonsibiliteis include
+
+- uploading images to the azure storage server
+
+## Back End Dependencies
+
+These are the dependencies for server.js. Navigate to the /server directory before running the install commands
+
+```
+npm install express
+npm install --save-dev nodemon
+npm install cors
+```
+
+- express : server side framework
+- nodemon : automatically restarts the node application when file changes in the directory are detected
+- cors : Cross Origin Resource Sharing
+
+More info can about the server can be found at /paint-night-inspiration-bot/server/readme.md
 
 ## API Key Environment Variables
+
+### Front End
 
 The API keys are stored as environment variables in a ".env.local" file in the root directory.
 If no such file exist, create that file and create value-key pairs with the following values :
@@ -75,11 +84,28 @@ If no such file exist, create that file and create value-key pairs with the foll
 VITE_GEMINI_API_KEY="YOUR-KEY"
 VITE_AZURE_VISION_KEY="YOUR-KEY"
 VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
-VITE_CLERK_PUBLISHABLE_KEY="YOUR KEY"
 ```
 
-## Start Development Server
+### Back End
+
+A connection string is used to connect to the azure storage server. Create a file called '.env' and add this value :
 
 ```
- npm run dev
+AZURE_STORAGE_CONNECTION_STRING=YourConnectionString
+```
+
+Do not put quotes around the string or the azure server will not read it correctly
+
+## Start Development Server(s)
+
+### Front End
+
+```
+ paint-night-inspiration-bot> npm run dev
+```
+
+### Back End
+
+```
+paint-night-inspiration-bot/server> npm run dev
 ```

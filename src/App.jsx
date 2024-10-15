@@ -1,9 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import GeminiTestButton from "../components/gemini-test";
-import AzureTestButton from "../components/azure-test";
-import GetImgTestButton from "../components/test-getimg";
-import ImageCarousel from "../components/image-carousel";
 import ChipsArray from "../components/chip-array";
 import {
   SignedIn,
@@ -25,6 +22,7 @@ import { pink, purple } from "@mui/material/colors";
 import ReferenceImagePaper from "../components/reference-image-paper";
 import ImageGrid from "../components/image-grid";
 import GenerateImageButton from "../components/generate-img-button";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -50,6 +48,15 @@ function App() {
     console.log([...imageUrls, newUrl]);
     setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
   };
+
+  const fetchAPI = async () => {
+    const response = await axios.get("http://localhost:8080/api");
+    console.log(response.data.fruits);
+  };
+
+  useEffect(() => {
+    fetchAPI();
+  }, []);
 
   return (
     <>
