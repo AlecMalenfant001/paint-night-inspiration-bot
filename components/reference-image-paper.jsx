@@ -18,6 +18,7 @@ export default function ReferenceImagePaper() {
     const formData = new FormData();
     formData.append("image", file);
 
+    // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
     try {
       const response = await fetch("http://localhost:8080/upload", {
         method: "POST",
@@ -25,41 +26,37 @@ export default function ReferenceImagePaper() {
       });
       const data = await response.json();
       console.log("Publicly accessible URL:", data.url);
+
+      // upload image to description API
+      console.log("file", file);
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          // this second async function is for the image description
+          const imageDataUrl = reader.result;
+          console.log("imageDataUrl", imageDataUrl);
+          setImage(imageDataUrl);
+          setIsImageUploaded(true);
+
+          console.log("Public URL:", data.url); // debug
+
+          // Create an instance of ImageDescription with the public URL
+          const azureDescription = new ImageDescription(data.url);
+          await azureDescription.describeImage();
+
+          // Update state with the description and confidence
+          const descriptionText = azureDescription.getDescriptionText();
+          const confidence = azureDescription.getDescriptionConfidence() * 100;
+          console.log("Description Text:", descriptionText);
+          console.log("Confidence:", confidence);
+
+          setImgDescription(descriptionText);
+          setDescriptionConfidence(confidence);
+        };
+        reader.readAsDataURL(file);
+      }
     } catch (error) {
       console.error("Error uploading image:", error);
-    }
-
-    // upload image to description API
-    console.log("file", file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        // this second async function is for the image description
-        const imageDataUrl = reader.result;
-        console.log("imageDataUrl", imageDataUrl);
-        setImage(imageDataUrl);
-        setIsImageUploaded(true);
-
-        // Create an instance of ImageDescription with the Data URL
-        //const azureDescription = new ImageDescription(imageDataUrl);
-        //await azureDescription.describeImage();
-
-        // Temporary image URL
-        const azureDescription = new ImageDescription(
-          "https://www.kentpaulette.com/wp-content/uploads/moose-painting-art-antlers-bull-alces-elk-kent-paulette-1232x1536.jpg.webp"
-        );
-        await azureDescription.describeImage();
-
-        // Update state with the description and confidence
-        const descriptionText = azureDescription.getDescriptionText();
-        const confidence = azureDescription.getDescriptionConfidence() * 100;
-        console.log("Description Text:", descriptionText);
-        console.log("Confidence:", confidence);
-
-        setImgDescription(descriptionText);
-        setDescriptionConfidence(confidence);
-      };
-      reader.readAsDataURL(file);
     }
   };
 
