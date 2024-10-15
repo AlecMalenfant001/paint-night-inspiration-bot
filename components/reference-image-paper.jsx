@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Typography, Button } from "@mui/material";
+import { Paper, Typography, Button, CircularProgress } from "@mui/material";
 import ReferenceImageFooter from "./reference-img-footer";
 import ImageDescription from "./scripts/imageDescription";
 import { BlobServiceClient } from "@azure/storage-blob";
@@ -9,14 +9,17 @@ export default function ReferenceImagePaper() {
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [imgDescription, setImgDescription] = useState("");
   const [descriptionConfidence, setDescriptionConfidence] = useState(0.0);
+  const [loading, setLoading] = useState(false);
 
   const handleImageUpload = async (event) => {
     // this first async function is for the image upload
+
+    // Get the file from the event
     const file = event.target.files[0];
-    const filePath = event.target.value;
-    console.log("File Path:", filePath);
     const formData = new FormData();
     formData.append("image", file);
+
+    setLoading(true); // Set loading to true while fetching
 
     // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
     try {
@@ -52,11 +55,13 @@ export default function ReferenceImagePaper() {
 
           setImgDescription(descriptionText);
           setDescriptionConfidence(confidence);
+          setLoading(false);
         };
         reader.readAsDataURL(file);
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+      setLoading(false);
     }
   };
 
@@ -120,7 +125,12 @@ export default function ReferenceImagePaper() {
         onChange={handleImageUpload}
       />
       <label htmlFor="upload-button-file">
-        <Button variant="contained" color="primary" component="span">
+        <Button
+          variant="contained"
+          color="primary"
+          component="span"
+          disabled={loading}
+        >
           Upload Image
         </Button>
       </label>
