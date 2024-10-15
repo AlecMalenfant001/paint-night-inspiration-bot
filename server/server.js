@@ -1,3 +1,6 @@
+// This javascript server will handle uploading reference images to Azure blob storage
+// to be used in the
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -19,6 +22,9 @@ app.get("/api", (req, res) => {
 
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
+    require("dotenv").config(); // used to retrieve the connection string from the .env file
+    //const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       AZURE_STORAGE_CONNECTION_STRING
     );
@@ -37,5 +43,5 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 
 //run the server
 app.listen(port, () => {
-  console.log("Server running on port {port}");
+  console.log("Server running on port " + port);
 });
