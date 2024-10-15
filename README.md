@@ -61,10 +61,16 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @mui/icons-material
   npm install @fontsource/roboto
   npm install @clerk/clerk-react
+  npm install @azure/storage-blob
+  npm install axios
+  npm install multer
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
 - mui is a component library called 'Material UI'
+- azure/storage-blob is used to store reference images
+- axios is an HTTP client for node.js
+- multer is middleware to help with form data
 
 ## API Key Environment Variables
 
@@ -75,7 +81,6 @@ If no such file exist, create that file and create value-key pairs with the foll
 VITE_GEMINI_API_KEY="YOUR-KEY"
 VITE_AZURE_VISION_KEY="YOUR-KEY"
 VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
-VITE_CLERK_PUBLISHABLE_KEY="YOUR KEY"
 ```
 
 ## Start Development Server

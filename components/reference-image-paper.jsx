@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Paper, Typography, Button } from "@mui/material";
 import ReferenceImageFooter from "./reference-img-footer";
 import ImageDescription from "./scripts/imageDescription";
+import { BlobServiceClient } from "@azure/storage-blob";
 
 export default function ReferenceImagePaper() {
   const [image, setImage] = useState("https://via.placeholder.com/150");
@@ -10,12 +11,41 @@ export default function ReferenceImagePaper() {
   const [descriptionConfidence, setDescriptionConfidence] = useState(0.0);
 
   const handleImageUpload = async (event) => {
-    // first async function is for the image upload
+    // this first async function is for the image upload
     const file = event.target.files[0];
+    const filePath = event.target.value;
+    console.log("File Path:", filePath);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("http://localhost:8080/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      console.log("Publicly accessible URL:", data.url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+
+    // Upload image to azure to get a publicly accessable url to the uploaded reference image
+    /*
+    uploadImageToAzure(
+      filePath, //image path
+      "referenceimages", //container name
+      "blobfish0" //blob name
+    ).then((url) => {
+      console.log("Publicly accessible URL:", url);
+    });
+    */
+
+    // upload image to description API
+    console.log("file", file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        // second async function is for the image description
+        // this second async function is for the image description
         const imageDataUrl = reader.result;
         console.log("imageDataUrl", imageDataUrl);
         setImage(imageDataUrl);
@@ -44,13 +74,37 @@ export default function ReferenceImagePaper() {
     }
   };
 
+  // Upload the reference image to Azure Blob Storage
+  async function uploadImageToAzure(imagePath, containerName, blobName) {
+    try {
+      const AZURE_STORAGE_CONNECTION_STRING = import.meta.env
+        .VITE_STORAGE_CONNECTION_STRING;
+      console.log("Azure Connection String:", AZURE_STORAGE_CONNECTION_STRING);
+      const blobServiceClient = BlobServiceClient.fromConnectionString(
+        AZURE_STORAGE_CONNECTION_STRING
+      );
+      const containerClient =
+        blobServiceClient.getContainerClient(containerName);
+
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+      const uploadBlobResponse = await blockBlobClient.uploadFile(imagePath);
+      console.log(
+        `Upload block blob ${blobName} successfully`,
+        uploadBlobResponse.requestId
+      );
+
+      // Get the URL of the uploaded image
+      const imageUrl = blockBlobClient.url;
+      console.log(`Image URL: ${imageUrl}`);
+      return imageUrl;
+    } catch (error) {
+      console.error("Error uploading image to Azure:", error);
+      return null;
+    }
+  }
+
   /* Conditionally Render the image description and description confidence */
   function Footer({ isImageUploaded, descriptionConfidence, imgDescription }) {
-    console.log("Footer Props:", {
-      isImageUploaded,
-      descriptionConfidence,
-      imgDescription,
-    });
     if (isImageUploaded) {
       return (
         <ReferenceImageFooter
