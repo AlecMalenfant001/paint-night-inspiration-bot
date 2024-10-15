@@ -29,17 +29,6 @@ export default function ReferenceImagePaper() {
       console.error("Error uploading image:", error);
     }
 
-    // Upload image to azure to get a publicly accessable url to the uploaded reference image
-    /*
-    uploadImageToAzure(
-      filePath, //image path
-      "referenceimages", //container name
-      "blobfish0" //blob name
-    ).then((url) => {
-      console.log("Publicly accessible URL:", url);
-    });
-    */
-
     // upload image to description API
     console.log("file", file);
     if (file) {

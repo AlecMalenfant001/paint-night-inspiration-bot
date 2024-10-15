@@ -15,25 +15,35 @@ const port = 8080;
 
 app.use(cors(corsOptions));
 
-//create route for backend api
+//create testing route for backend api
 app.get("/api", (req, res) => {
   res.json({ fruits: ["Alec, Alex, Lili, Reagan, Troye Sivane"] });
 });
 
+// upload reference image to blob storage
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
-    require("dotenv").config(); // used to retrieve the connection string from the .env file
-    //const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+    // retrieve the connection string from the .env file
+    require("dotenv").config();
+    const AZURE_STORAGE_CONNECTION_STRING =
+      process.env.AZURE_STORAGE_CONNECTION_STRING;
 
+    // get file name from request body
+    console.log("req.file", req.file);
+    const fileName = req.file.originalname;
+
+    // create a new BlobServiceClient and ContainerClient
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       AZURE_STORAGE_CONNECTION_STRING
     );
     const containerClient = blobServiceClient.getContainerClient("images");
-    const blockBlobClient = containerClient.getBlockBlobClient("blobfish0");
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
+    // upload the image to Azure Blob Storage
     const buffer = req.file.buffer;
     await blockBlobClient.uploadData(buffer);
 
+    // return the URL of the uploaded image
     const url = blockBlobClient.url;
     res.json({ url });
   } catch (error) {
