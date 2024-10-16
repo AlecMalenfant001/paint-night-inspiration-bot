@@ -30,7 +30,8 @@ const theme = createTheme({
       main: purple[900],
     },
     secondary: {
-      main: pink[300],
+      main: "#43304a",
+      pink: pink[300],
     },
   },
 });
