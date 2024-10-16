@@ -84,7 +84,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
             disabled={loading}
             onClick={fetchImageFromGetImgAI}
           >
-            Generate Image
+            ✨ Generate Image
           </Button>
           {loading && (
             <CircularProgress
