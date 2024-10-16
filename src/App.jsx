@@ -117,7 +117,6 @@ function App() {
                 <GenerateImageButton addImgUrlFunc={handleAddImage} />
               </Box>
               <ImageGrid imageUrls={imageUrls} />
-              <GeminiTestButton />
             </Box>
           </Stack>
         </Container>
