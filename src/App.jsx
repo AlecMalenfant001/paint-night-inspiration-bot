@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import GeminiTestButton from "../components/gemini-test";
-import ChipsArray from "../components/chip-array";
+import ChipsArray from "../components/keywords";
 import {
   SignedIn,
   SignedOut,
