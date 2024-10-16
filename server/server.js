@@ -2,6 +2,7 @@
 // to be used in the
 
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
@@ -48,6 +49,38 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     res.json({ url });
   } catch (error) {
     res.status(500).send("Error uploading image to Azure: " + error.message);
+  }
+});
+
+// Setting and Getting the current image description
+let imgDescription = "";
+app.use(bodyParser.json());
+app.post("/description", (req, res) => {
+  // Set image description
+  try {
+    imgDescription = req.body.description;
+    if (typeof imgDescription != "undefined") {
+      // Success
+      res
+        .status(200)
+        .send("Image description set successfully: " + imgDescription);
+    } else {
+      // Error : imgDescription undefined
+      res
+        .status(500)
+        .send("Error settting image description: description is undefined");
+    }
+  } catch (error) {
+    res.status(500).send("Error setting image description: " + error.message);
+  }
+});
+app.get("/description", (req, res) => {
+  // Get image description
+  try {
+    console.log("imgDescription: ", imgDescription);
+    res.status(200).json({ description: imgDescription });
+  } catch (error) {
+    res.status(500).send("Error getting image description: " + error.message);
   }
 });
 
