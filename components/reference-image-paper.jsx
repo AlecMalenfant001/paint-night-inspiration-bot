@@ -5,7 +5,9 @@ import ImageDescription from "./scripts/imageDescription";
 import axios from "axios";
 
 export default function ReferenceImagePaper() {
-  const [image, setImage] = useState("https://via.placeholder.com/150");
+  const [image, setImage] = useState(
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+  );
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [imgDescription, setImgDescription] = useState("");
   const [descriptionConfidence, setDescriptionConfidence] = useState(0.0);
