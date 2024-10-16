@@ -36,13 +36,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const [imageUrls, setImageUrls] = useState([
-    "basquiatMoose.png",
-    "frog2.png",
-    "Glitch.png",
-    "guillotine.png",
-    "haringMoose.png",
-  ]);
+  const [imageUrls, setImageUrls] = useState([]);
 
   const handleAddImage = (newUrl) => {
     console.log([...imageUrls, newUrl]);
