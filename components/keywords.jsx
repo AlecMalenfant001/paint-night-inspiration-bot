@@ -3,8 +3,9 @@ import { styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AddKeywordButton from "./add-keyword-button";
+import axios from "axios";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -14,7 +15,25 @@ export default function ChipsArray() {
   const [chipData, setChipData] = React.useState([]);
 
   const handleAdd = (chipToAdd) => {
-    setChipData((chips) => [...chips, { key: chips.length, label: chipToAdd }]);
+    setChipData((chips) => {
+      const updatedChips = [...chips, { key: chips.length, label: chipToAdd }];
+
+      // Update keywords list on server
+      const updateServer = async () => {
+        try {
+          await axios.post("http://localhost:8080/keywords", {
+            keywords: updatedChips,
+          });
+        } catch (error) {
+          console.error("Error updating keywords:", error);
+        }
+      };
+
+      updateServer();
+      console.log("updated server");
+
+      return updatedChips;
+    });
   };
 
   const handleDelete = (chipToDelete) => () => {

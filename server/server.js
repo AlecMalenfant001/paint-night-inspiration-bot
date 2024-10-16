@@ -15,6 +15,7 @@ const upload = multer();
 const port = 8080;
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
 //create testing route for backend api
 app.get("/api", (req, res) => {
@@ -52,9 +53,8 @@ app.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
-// Setting and Getting the current image description
+//Image Description
 let imgDescription = "";
-app.use(bodyParser.json());
 app.post("/description", (req, res) => {
   // Set image description
   try {
@@ -81,6 +81,26 @@ app.get("/description", (req, res) => {
     res.status(200).json({ description: imgDescription });
   } catch (error) {
     res.status(500).send("Error getting image description: " + error.message);
+  }
+});
+
+//Keywords
+let keywordsList = [];
+app.post("/keywords", (req, res) => {
+  try {
+    // Add new keyword to keyword list
+    keywordsList = req.body.keywords;
+    req.status(200).send("update keywords sucessful");
+  } catch (error) {
+    res.status(500).send("Server Error : Error updating keywords : " + error);
+  }
+});
+app.get("/keywords", (req, res) => {
+  try {
+    //return keyword list
+    res.status(200).json({ keywords: keywordsList });
+  } catch (error) {
+    res.status(500).send("Server Error : Error getting keywords " + error);
   }
 });
 
