@@ -4,7 +4,6 @@ import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
 import { Box, IconButton, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import AddKeywordButton from "./add-keyword-button";
 
 const ListItem = styled("li")(({ theme }) => ({
