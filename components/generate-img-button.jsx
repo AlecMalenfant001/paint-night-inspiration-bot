@@ -35,11 +35,22 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       );
     }
 
+    // Get the prompt from the server
+    let promptString;
+    try {
+      const response = await axios.get("http://localhost:8080/prompt");
+      promptString = response.data.prompt;
+      console.log(response.statusText);
+      console.log("prompt", promptString);
+    } catch (error) {
+      console.error("Error while getting prompt from server: ", error);
+    }
+
     // Create and retrieve the AI image
     try {
       // Getimg request body
       const body = JSON.stringify({
-        prompt: imgDescription,
+        prompt: promptString,
         width: 1024,
         height: 1024,
         output_format: "png",

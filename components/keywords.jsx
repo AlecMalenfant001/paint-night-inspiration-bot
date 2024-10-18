@@ -40,6 +40,22 @@ export default function ChipsArray() {
     setChipData((chips) =>
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
+
+    // Update keywords list on server
+    const updateServer = async () => {
+      try {
+        await axios.post("http://localhost:8080/keywords", {
+          keywords: chipData,
+        });
+      } catch (error) {
+        console.error("Error updating keywords:", error);
+      }
+    };
+
+    updateServer();
+    console.log("updated server");
+
+    return chipData;
   };
 
   return (

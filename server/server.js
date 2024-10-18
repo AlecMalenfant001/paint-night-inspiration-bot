@@ -90,7 +90,8 @@ app.post("/keywords", (req, res) => {
   try {
     // Add new keyword to keyword list
     keywordsList = req.body.keywords;
-    req.status(200).send("update keywords sucessful");
+    res.status(200).send("update keywords sucessful");
+    console.log("KeywordsList: ", keywordsList);
   } catch (error) {
     res.status(500).send("Server Error : Error updating keywords : " + error);
   }
@@ -101,6 +102,22 @@ app.get("/keywords", (req, res) => {
     res.status(200).json({ keywords: keywordsList });
   } catch (error) {
     res.status(500).send("Server Error : Error getting keywords " + error);
+  }
+});
+
+//Prompt
+let promptString = "";
+app.get("/prompt", (req, res) => {
+  try {
+    // Extract labels from keywordsList
+    let labels = keywordsList.map((keyword) => keyword.label);
+
+    // Concatenate imgDescription with labels
+    promptString = "A painting of " + imgDescription + " " + labels.join(" ");
+    console.log("promptString: ", promptString);
+    res.status(200).json({ prompt: promptString });
+  } catch (error) {
+    res.status(500).send("Erorr while getting prompt from server" + error);
   }
 });
 
