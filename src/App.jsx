@@ -23,6 +23,7 @@ import ReferenceImagePaper from "../components/reference-image-paper";
 import ImageGrid from "../components/image-grid";
 import GenerateImageButton from "../components/generate-img-button";
 import axios from "axios";
+import Footer from "../components/footer";
 
 const theme = createTheme({
   palette: {
@@ -120,6 +121,8 @@ function App() {
               <ImageGrid imageUrls={imageUrls} />
             </Box>
           </Stack>
+          {/* Footer */}
+          <Footer />
         </Container>
       </ThemeProvider>
     </>
