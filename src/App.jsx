@@ -43,7 +43,7 @@ export async function showImage(id) {
     const response = await fetch(
       `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
     );
-
+``
     if (!response.ok) {
       const error = new Error("An error occurred while fetching the image");
       error.code = response.status;
