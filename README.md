@@ -65,9 +65,6 @@ These are the dependencies for server.js. Navigate to the /server directory befo
 npm install express
 npm install --save-dev nodemon
 npm install cors
-npm i mongodb
-npm i mongoose
-npm i dotenv
 ```
 
 - express : server side framework
@@ -87,8 +84,6 @@ If no such file exist, create that file and create value-key pairs with the foll
 VITE_GEMINI_API_KEY="YOUR-KEY"
 VITE_AZURE_VISION_KEY="YOUR-KEY"
 VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_c3VwcmVtZS1iYXQtMTYuY2xlcmsuYWNjb3VudHMuZGV2JA
-
 ```
 
 ### Back End
@@ -97,11 +92,6 @@ A connection string is used to connect to the azure storage server. Create a fil
 
 ```
 AZURE_STORAGE_CONNECTION_STRING=YourConnectionString
-```
-A connection string is used to connect to database. Create a file called '.env' and add this value inside the backend :
-
-```
-MONGO_URL = mongodb+srv://Nadeem:Jaffer@cluster0.ewb4t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 ```
 
 Do not put quotes around the string or the azure server will not read it correctly
@@ -117,5 +107,5 @@ Do not put quotes around the string or the azure server will not read it correct
 ### Back End
 
 ```
-paint-night-inspiration-bot/backend> npm run start
+paint-night-inspiration-bot/server> npm run dev
 ```

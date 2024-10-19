@@ -1,25 +1,20 @@
-import { Box, Button, CircularProgress, TextField } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { React, useState } from "react";
 
 export default function GenerateImageButton({ addImgUrlFunc }) {
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState("");
-  const [error, setError] = useState(false);
-
+  const [success, setSuccess] = useState(false);
+  // This function fetches an image from the GetImg AI API
   async function fetchImageFromGetImgAI() {
-    if (!prompt.trim()) {
-      setError(true);
-      return;
-    }
+    setLoading(true); // Set loading to true while fetching
 
-    setLoading(true);
-    setError(false);
-
+    // Get the API key from the environment
     const apiKey = import.meta.env.VITE_GETIMG_API_KEY;
     const url = "https://api.getimg.ai/v1/stable-diffusion-xl/text-to-image";
 
+    // Request Body
     const body = JSON.stringify({
-      prompt: prompt,
+      prompt: "a cat in a hat",
       width: 1024,
       height: 1024,
       output_format: "png",
@@ -27,6 +22,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       model: "stable-diffusion-xl-v1-0",
     });
 
+    // Request options
     const options = {
       method: "POST",
       headers: {
@@ -37,66 +33,27 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       body,
     };
 
+    // Try to fetch the image
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(url, options); // Make the API request
 
+      // Handle non-2xx status codes
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
-      const data = await response.json();
-      const imgUrl = data.url;
-
-      // Upload the image to the database
-      await uploadImage(imgUrl, prompt, "Generated Image");
-
-      addImgUrlFunc(imgUrl);
-      setLoading(false);
+      const data = await response.json(); // Parse the JSON response
+      addImgUrlFunc(data.url); // Return the new URL to the parent component
+      setLoading(false); // Set loading to false
     } catch (error) {
-      console.error("Error fetching or uploading image:", error);
-      setLoading(false);
-      return null;
-    }
-  }
-
-  async function uploadImage(img, prompt, name) {
-    try {
-      const response = await fetch(
-        "https://ai-chat-2411.onrender.com/api/store/imageGeneration",
-        {
-          method: "POST",
-          body: JSON.stringify({ imgUrl: img, prompt: prompt, name: name }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to upload image data.");
-      }
-
-      const { imgUrl } = await response.json();
-      return imgUrl;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      throw error;
+      console.error("Error fetching image:", error);
+      setLoading(false); // Set loading to false
+      return null; // Or handle the error differently
     }
   }
 
   return (
     <>
-      <Box
-        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
-        <TextField
-          sx={{ m: 2, width: "300px" }}
-          label="Enter image prompt"
-          variant="outlined"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          error={error}
-          helperText={error ? "Prompt cannot be empty" : ""}
-        />
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ m: 1, position: "relative" }}>
           <Button
             sx={{ m: 2 }}

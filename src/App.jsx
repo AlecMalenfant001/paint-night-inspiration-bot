@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import GeminiTestButton from "../components/gemini-test";
-import AzureTestButton from "../components/azure-test";
-import GetImgTestButton from "../components/test-getimg";
-import ImageCarousel from "../components/image-carousel";
 import ChipsArray from "../components/chip-array";
 import {
   SignedIn,
@@ -14,6 +11,7 @@ import {
 import {
   AppBar,
   Box,
+  Button,
   Container,
   Stack,
   Typography,
@@ -24,6 +22,7 @@ import { pink, purple } from "@mui/material/colors";
 import ReferenceImagePaper from "../components/reference-image-paper";
 import ImageGrid from "../components/image-grid";
 import GenerateImageButton from "../components/generate-img-button";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -37,110 +36,99 @@ const theme = createTheme({
 });
 
 function App() {
-  const [imageUrls, setImageUrls] = useState([]);
-  const [loadingImages, setLoadingImages] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(
-          "https://ai-chat-2411.onrender.com/api/store/getImage"
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to fetch images: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        if (data.length === 0) {
-          console.log("No images found.");
-          return; // Do nothing if no images
-        }
-
-        const urls = data.map((item) => item.imgUrl);
-        setImageUrls(urls);
-      } catch (error) {
-        console.error("Error loading images:", error);
-        setError(error.message);
-      } finally {
-        setLoadingImages(false); // Set loading to false once the fetch completes
-      }
-    };
-
-    fetchImages();
-  }, []);
+  const [imageUrls, setImageUrls] = useState([
+    "basquiatMoose.png",
+    "frog2.png",
+    "Glitch.png",
+    "guillotine.png",
+    "haringMoose.png",
+  ]);
 
   const handleAddImage = (newUrl) => {
-    setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
+    console.log([...imageUrls, newUrl]);
+    setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
   };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Container
-        sx={{
-          bgcolor: theme.palette.secondary.main,
-          height: "100%",
-        }}
-        disableGutters
-      >
-        <Box sx={{ width: "100%" }}>
-          <AppBar position="static" sx={{ width: "100%" }}>
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Paint Night Inspiration Bot
-              </Typography>
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </Toolbar>
-          </AppBar>
-        </Box>
+  const fetchAPI = async () => {
+    const response = await axios.get("http://localhost:8080/api");
+    console.log(response.data.fruits);
+  };
 
-        <Stack
-          direction={{ md: "column", lg: "row" }}
-          alignItems="center"
-          sx={{ m: 2 }}
+  useEffect(() => {
+    fetchAPI();
+  }, []);
+
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        {/*Wrapper*/}
+        <Container
+          sx={{
+            bgcolor: theme.palette.secondary.main,
+            height: "100%",
+          }}
+          disableGutters
         >
-          <Box
-            sx={{
-              width: { xs: "100%", sm: "70%", md: "80%", lg: "50%" },
-              mx: 2,
-            }}
-          >
-            <ReferenceImagePaper />
-            <ChipsArray />
+          {/*Title Bar*/}
+          <Box sx={{ width: "100%" }}>
+            <AppBar position="static" sx={{ width: "100%" }}>
+              <Toolbar>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  Paint Night Inspiration Bot
+                </Typography>
+                <SignedOut>
+                  <SignInButton />
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+              </Toolbar>
+            </AppBar>
           </Box>
-          <Box
-            sx={{
-              width: { xs: "100%", sm: "70%", md: "80%", lg: "50%" },
-              mx: 2,
-            }}
+
+          {/*App Body*/}
+          <Stack
+            direction={{ md: "column", lg: "row" }}
+            alignItems="center"
+            sx={{ m: 2 }}
           >
+            {" "}
+            {/*Left / Top part of stack*/}
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
+                width: { xs: "100%", sm: "70%", md: "80%", lg: "50%" },
+                mx: 2,
               }}
             >
-              <GenerateImageButton addImgUrlFunc={handleAddImage} />
+              {/*Source Image*/}
+              <ReferenceImagePaper />
+              {/*Keywords*/}
+              <ChipsArray />
             </Box>
-            {loadingImages ? (
-              <p>Loading images...</p>
-            ) : error ? (
-              <p>Error loading images: {error}</p>
-            ) : (
+            {/*Right / Bottom part of stack */}
+            <Box
+              sx={{
+                width: { xs: "100%", sm: "70%", md: "80%", lg: "50%" },
+                mx: 2,
+              }}
+            >
+              {/*Generate Image Button*/}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <GenerateImageButton addImgUrlFunc={handleAddImage} />
+              </Box>
               <ImageGrid imageUrls={imageUrls} />
-            )}
-            <GeminiTestButton />
-          </Box>
-        </Stack>
-      </Container>
-    </ThemeProvider>
+              <GeminiTestButton />
+            </Box>
+          </Stack>
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }
 
