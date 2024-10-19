@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import GeminiTestButton from "../components/gemini-test";
-import ChipsArray from "../components/chip-array";
+import ChipsArray from "../components/keywords";
 import {
   SignedIn,
   SignedOut,
@@ -23,6 +23,7 @@ import ReferenceImagePaper from "../components/reference-image-paper";
 import ImageGrid from "../components/image-grid";
 import GenerateImageButton from "../components/generate-img-button";
 import axios from "axios";
+import Footer from "../components/footer";
 
 const theme = createTheme({
   palette: {
@@ -30,19 +31,14 @@ const theme = createTheme({
       main: purple[900],
     },
     secondary: {
-      main: pink[300],
+      main: "#43304a",
+      pink: pink[300],
     },
   },
 });
 
 function App() {
-  const [imageUrls, setImageUrls] = useState([
-    "basquiatMoose.png",
-    "frog2.png",
-    "Glitch.png",
-    "guillotine.png",
-    "haringMoose.png",
-  ]);
+  const [imageUrls, setImageUrls] = useState([]);
 
   const handleAddImage = (newUrl) => {
     console.log([...imageUrls, newUrl]);
@@ -123,9 +119,10 @@ function App() {
                 <GenerateImageButton addImgUrlFunc={handleAddImage} />
               </Box>
               <ImageGrid imageUrls={imageUrls} />
-              <GeminiTestButton />
             </Box>
           </Stack>
+          {/* Footer */}
+          <Footer />
         </Container>
       </ThemeProvider>
     </>

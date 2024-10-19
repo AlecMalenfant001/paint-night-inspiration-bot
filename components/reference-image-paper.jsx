@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Paper, Typography, Button, CircularProgress } from "@mui/material";
 import ReferenceImageFooter from "./reference-img-footer";
 import ImageDescription from "./scripts/imageDescription";
-import { BlobServiceClient } from "@azure/storage-blob";
+import axios from "axios";
 
 export default function ReferenceImagePaper() {
-  const [image, setImage] = useState("https://via.placeholder.com/150");
+  const [image, setImage] = useState(
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+  );
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [imgDescription, setImgDescription] = useState("");
   const [descriptionConfidence, setDescriptionConfidence] = useState(0.0);
@@ -21,8 +23,9 @@ export default function ReferenceImagePaper() {
 
     setLoading(true); // Set loading to true while fetching
 
-    // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
+    // upload image to APIs
     try {
+      // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
       const response = await fetch("http://localhost:8080/upload", {
         method: "POST",
         body: formData,
@@ -50,11 +53,20 @@ export default function ReferenceImagePaper() {
           // Update state with the description and confidence
           const descriptionText = azureDescription.getDescriptionText();
           const confidence = azureDescription.getDescriptionConfidence() * 100;
-          console.log("Description Text:", descriptionText);
-          console.log("Confidence:", confidence);
-
           setImgDescription(descriptionText);
           setDescriptionConfidence(confidence);
+
+          // Update server with image description to be used by genrate image button
+          const response = await axios.post(
+            "http://localhost:8080/description",
+            { description: descriptionText },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
           setLoading(false);
         };
         reader.readAsDataURL(file);
@@ -64,35 +76,6 @@ export default function ReferenceImagePaper() {
       setLoading(false);
     }
   };
-
-  // Upload the reference image to Azure Blob Storage
-  async function uploadImageToAzure(imagePath, containerName, blobName) {
-    try {
-      const AZURE_STORAGE_CONNECTION_STRING = import.meta.env
-        .VITE_STORAGE_CONNECTION_STRING;
-      console.log("Azure Connection String:", AZURE_STORAGE_CONNECTION_STRING);
-      const blobServiceClient = BlobServiceClient.fromConnectionString(
-        AZURE_STORAGE_CONNECTION_STRING
-      );
-      const containerClient =
-        blobServiceClient.getContainerClient(containerName);
-
-      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-      const uploadBlobResponse = await blockBlobClient.uploadFile(imagePath);
-      console.log(
-        `Upload block blob ${blobName} successfully`,
-        uploadBlobResponse.requestId
-      );
-
-      // Get the URL of the uploaded image
-      const imageUrl = blockBlobClient.url;
-      console.log(`Image URL: ${imageUrl}`);
-      return imageUrl;
-    } catch (error) {
-      console.error("Error uploading image to Azure:", error);
-      return null;
-    }
-  }
 
   /* Conditionally Render the image description and description confidence */
   function Footer({ isImageUploaded, descriptionConfidence, imgDescription }) {
