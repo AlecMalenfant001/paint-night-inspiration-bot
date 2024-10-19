@@ -1,10 +1,12 @@
 import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { React, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function GenerateImageButton({ addImgUrlFunc }) {
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [error, setError] = useState(false);
+  const { isSignedIn, user, isLoaded } = useUser();
 
   async function fetchImageFromGetImgAI() {
     if (!prompt.trim()) {
@@ -47,7 +49,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       const imgUrl = data.url;
 
       // Upload the image to the database
-      await uploadImage(imgUrl, prompt, "Generated Image");
+      await uploadImage(imgUrl, prompt, user.firstName);
 
       addImgUrlFunc(imgUrl);
       setLoading(false);
