@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 import "./App.css";
 import GeminiTestButton from "../components/gemini-test";
 import AzureTestButton from "../components/azure-test";
@@ -36,42 +37,70 @@ const theme = createTheme({
   },
 });
 
+export async function showImage(id) {
+  const encodedId = encodeURIComponent(id);
+  try {
+    const response = await fetch(
+      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
+    );
+
+    if (!response.ok) {
+      const error = new Error("An error occurred while fetching the image");
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+
+    const imageData = await response.json();
+    return imageData;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    throw error;
+  }
+}
+
 function App() {
-  const [imageUrls, setImageUrls] = useState([]);
+  const { isSignedIn, user, isLoaded } = useUser();
+  const [imageUrls, setImageUrls] = useState([
+    "basquiatMoose.png",
+    "frog2.png",
+    "Glitch.png",
+    "guillotine.png",
+    "haringMoose.png",
+  ]);
   const [loadingImages, setLoadingImages] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchImages = async () => {
-      try {
-        const response = await fetch(
-          "https://ai-chat-2411.onrender.com/api/store/getImage"
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to fetch images: ${response.statusText}`);
+      console.log("Checking fetch conditions...");
+      if (isLoaded && isSignedIn && user) {
+        console.log("User is signed in. Fetching images for:", user.firstName);
+        try {
+          const imageData = await showImage(user.firstName);
+
+          // Extract URLs from fetched image data
+          const fetchedUrls = imageData.map((image) => image.imgUrl);
+
+          // Combine fetched images with sample images, with fetched images first
+          setImageUrls((prevUrls) => [...fetchedUrls, ...prevUrls]);
+        } catch (error) {
+          console.error("Error loading images:", error);
+          setError(error.message);
+        } finally {
+          setLoadingImages(false);
         }
-
-        const data = await response.json();
-
-        if (data.length === 0) {
-          console.log("No images found.");
-          return; // Do nothing if no images
-        }
-
-        const urls = data.map((item) => item.imgUrl);
-        setImageUrls(urls);
-      } catch (error) {
-        console.error("Error loading images:", error);
-        setError(error.message);
-      } finally {
-        setLoadingImages(false); // Set loading to false once the fetch completes
+      } else {
+        // If not signed in, we can reset loading state
+        setLoadingImages(false);
       }
     };
 
     fetchImages();
-  }, []);
+  }, [isLoaded, isSignedIn, user]);
 
   const handleAddImage = (newUrl) => {
+    // Add the new URL to the beginning of the imageUrls state
     setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
   };
 
@@ -127,7 +156,9 @@ function App() {
                 width: "100%",
               }}
             >
-              <GenerateImageButton addImgUrlFunc={handleAddImage} />
+              <SignedIn>
+                <GenerateImageButton addImgUrlFunc={handleAddImage} />
+              </SignedIn>
             </Box>
             {loadingImages ? (
               <p>Loading images...</p>
