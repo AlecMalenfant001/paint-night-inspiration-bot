@@ -156,9 +156,7 @@ function App() {
                 width: "100%",
               }}
             >
-              <SignedIn>
                 <GenerateImageButton addImgUrlFunc={handleAddImage} />
-              </SignedIn>
             </Box>
             {loadingImages ? (
               <p>Loading images...</p>
