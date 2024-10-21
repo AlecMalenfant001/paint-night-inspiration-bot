@@ -47,9 +47,12 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       }
       const data = await response.json();
       const imgUrl = data.url;
-
-      // Upload the image to the database
-      await uploadImage(imgUrl, prompt, user.firstName);
+      
+      if (!user) {
+        await uploadImage(imgUrl, prompt, "Generated Image");
+      }else{
+        await uploadImage(imgUrl, prompt, user.firstName);
+      }
 
       addImgUrlFunc(imgUrl);
       setLoading(false);
