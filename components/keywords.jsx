@@ -21,7 +21,7 @@ export default function ChipsArray() {
       // Update keywords list on server
       const updateServer = async () => {
         try {
-          await axios.post("http://localhost:8080/keywords", {
+          await axios.post("http://localhost:8800/keywords", {
             keywords: updatedChips,
           });
         } catch (error) {
@@ -44,7 +44,7 @@ export default function ChipsArray() {
     // Update keywords list on server
     const updateServer = async () => {
       try {
-        await axios.post("http://localhost:8080/keywords", {
+        await axios.post("http://localhost:8800/keywords", {
           keywords: chipData,
         });
       } catch (error) {

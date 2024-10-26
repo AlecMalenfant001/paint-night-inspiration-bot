@@ -25,7 +25,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // port number for this server
-const port = 8080;
+const port = 8800;
 
 //create testing route for backend api
 app.get("/api", (req, res) => {
