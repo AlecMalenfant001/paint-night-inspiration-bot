@@ -1,21 +1,31 @@
 // This javascript server will handle uploading reference images to Azure blob storage
 // to be used in the
 
+const { BlobServiceClient } = require("@azure/storage-blob");
+
+// setup access to environment variables
+require("dotenv").config();
+
+// setup multer to handle file uploads
+const multer = require("multer");
+const upload = multer();
+
+// setup express app
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+app.use(bodyParser.json());
+
+// setup cross object reference
 const cors = require("cors");
 const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
-const { BlobServiceClient } = require("@azure/storage-blob");
-const multer = require("multer");
-const upload = multer();
-const port = 8080;
-
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
+
+// port number for this server
+const port = 8080;
 
 //create testing route for backend api
 app.get("/api", (req, res) => {
@@ -26,7 +36,6 @@ app.get("/api", (req, res) => {
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     // retrieve the connection string from the .env file
-    require("dotenv").config();
     const AZURE_STORAGE_CONNECTION_STRING =
       process.env.AZURE_STORAGE_CONNECTION_STRING;
 
@@ -120,6 +129,17 @@ app.get("/prompt", (req, res) => {
     res.status(500).send("Erorr while getting prompt from server" + error);
   }
 });
+
+// Mongoose Database
+const mongoose = require("mongoose");
+const authRoute = require("./Routes/store");
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log("DB Connected"))
+  .catch((err) => console.log(err));
+
+app.use("/api/store", authRoute);
 
 //run the server
 app.listen(port, () => {
