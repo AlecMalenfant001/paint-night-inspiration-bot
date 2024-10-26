@@ -40,6 +40,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     };
 
     try {
+      // ask api for a new image
       const response = await fetch(url, options);
 
       if (!response.ok) {
@@ -47,10 +48,10 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       }
       const data = await response.json();
       const imgUrl = data.url;
-      
+
       if (!user) {
         await uploadImage(imgUrl, prompt, "Generated Image");
-      }else{
+      } else {
         await uploadImage(imgUrl, prompt, user.firstName);
       }
 
