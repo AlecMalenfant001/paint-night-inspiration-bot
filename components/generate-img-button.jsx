@@ -82,9 +82,9 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       // Try to upload to database
       try {
         if (!user) {
-          await uploadImageToMongo(imgUrl, prompt, "Generated Image");
+          await uploadImageToMongo(imgUrl, promptString, "Generated Image");
         } else {
-          await uploadImageToMongo(imgUrl, prompt, user.firstName);
+          await uploadImageToMongo(imgUrl, promptString, user.firstName);
         }
       } catch (e) {
         console.error("Image not saved to mongoDB: ", prompt, error);
