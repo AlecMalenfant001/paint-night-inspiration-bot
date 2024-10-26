@@ -1,10 +1,11 @@
 import { Box, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { React, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function GenerateImageButton({ addImgUrlFunc }) {
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const { isSignedIn, user, isLoaded } = useUser();
 
   // Create AI generated image from description
   async function fetchImageFromGetImgAI() {
@@ -24,7 +25,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     // Get the image description from the server
     let imgDescription;
     try {
-      const response = await axios.get("http://localhost:8080/description");
+      const response = await axios.get("http://localhost:8800/description");
       imgDescription = response.data.description;
       console.log("imgDescription", imgDescription);
     } catch (error) {
@@ -38,7 +39,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     // Get the prompt from the server
     let promptString;
     try {
-      const response = await axios.get("http://localhost:8080/prompt");
+      const response = await axios.get("http://localhost:8800/prompt");
       promptString = response.data.prompt;
       console.log(response.statusText);
       console.log("prompt", promptString);
@@ -76,12 +77,50 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
         throw new Error(`API request failed with status ${response.status}`);
       }
       const data = await response.json(); // Parse the JSON response
-      addImgUrlFunc(data.url); // Return the new URL to the parent component
+      const imgUrl = data.url;
+
+      // Try to upload to database
+      try {
+        if (!user) {
+          await uploadImageToMongo(imgUrl, prompt, "Generated Image");
+        } else {
+          await uploadImageToMongo(imgUrl, prompt, user.firstName);
+        }
+      } catch (e) {
+        console.error("Image not saved to mongoDB: ", prompt, error);
+      }
+
+      addImgUrlFunc(imgUrl); // Return the new URL to the parent component
       setLoading(false); // Set loading to false
     } catch (error) {
       console.error("Error fetching image:", error);
       setLoading(false); // Set loading to false
       return null; // Or handle the error differently
+    }
+  }
+
+  async function uploadImageToMongo(img, prompt, name) {
+    try {
+      const response = await fetch(
+        "https://ai-chat-2411.onrender.com/api/store/imageGeneration",
+        {
+          method: "POST",
+          body: JSON.stringify({ imgUrl: img, prompt: prompt, name: name }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image data to mongoDB server.");
+      }
+
+      const { imgUrl } = await response.json();
+      return imgUrl;
+    } catch (error) {
+      console.error("Error uploading image to mongoDB:", error);
+      throw error;
     }
   }
 
