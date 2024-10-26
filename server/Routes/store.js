@@ -1,8 +1,11 @@
+/* This script stores generated images to a mongodb database so that logged in users can access them again */
+
 const express = require("express");
 const router = express.Router();
 const Image = require("../models/Image");
 router.use(express.json());
 
+//Store Generated Image
 router.post("/imageGeneration", async (req, res) => {
   try {
     if (!req.body.imgUrl) {
@@ -23,6 +26,7 @@ router.post("/imageGeneration", async (req, res) => {
   }
 });
 
+// Get Stored Image
 router.get("/getImage", async (req, res) => {
   try {
     const images = await Image.find();
