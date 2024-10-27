@@ -26,7 +26,7 @@ export default function ReferenceImagePaper() {
     // upload image to APIs
     try {
       // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
-      const response = await fetch("http://localhost:8080/upload", {
+      const response = await fetch("http://localhost:8800/upload", {
         method: "POST",
         body: formData,
       });
@@ -58,7 +58,7 @@ export default function ReferenceImagePaper() {
 
           // Update server with image description to be used by genrate image button
           const response = await axios.post(
-            "http://localhost:8080/description",
+            "http://localhost:8800/description",
             { description: descriptionText },
             {
               headers: {

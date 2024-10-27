@@ -7,6 +7,7 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
 import {
   AppBar,
@@ -37,22 +38,66 @@ const theme = createTheme({
   },
 });
 
+export async function showImage(id) {
+  const encodedId = encodeURIComponent(id);
+  try {
+    const response = await fetch(
+      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
+    );
+    ``; //TODO : remove this
+    if (!response.ok) {
+      const error = new Error("An error occurred while fetching the image");
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+
+    const imageData = await response.json();
+    return imageData;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    throw error;
+  }
+}
+
 function App() {
+  const { isSignedIn, user, isLoaded } = useUser();
   const [imageUrls, setImageUrls] = useState([]);
-
-  const handleAddImage = (newUrl) => {
-    console.log([...imageUrls, newUrl]);
-    setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
-  };
-
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8080/api");
-    console.log(response.data.fruits);
-  };
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchAPI();
-  }, []);
+    const fetchImages = async () => {
+      console.log("Checking fetch conditions...");
+      if (isLoaded && isSignedIn && user) {
+        console.log("User is signed in. Fetching images for:", user.firstName);
+        try {
+          const imageData = await showImage(user.firstName);
+
+          // Extract URLs from fetched image data
+          const fetchedUrls = imageData.map((image) => image.imgUrl);
+
+          // Combine fetched images with sample images, with fetched images first
+          setImageUrls((prevUrls) => [...fetchedUrls, ...prevUrls]);
+        } catch (error) {
+          console.error("Error loading images:", error);
+          setError(error.message);
+        } finally {
+          setLoadingImages(false);
+        }
+      } else {
+        // If not signed in, we can reset loading state
+        setLoadingImages(false);
+      }
+    };
+
+    fetchImages();
+  }, [isLoaded, isSignedIn, user]);
+
+  const handleAddImage = (newUrl) => {
+    // Add the new URL to the beginning of the imageUrls state
+    setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
+  };
 
   return (
     <>
@@ -118,7 +163,13 @@ function App() {
               >
                 <GenerateImageButton addImgUrlFunc={handleAddImage} />
               </Box>
-              <ImageGrid imageUrls={imageUrls} />
+              {loadingImages ? (
+                <p>Loading images...</p>
+              ) : error ? (
+                <p>Error loading images: {error}</p>
+              ) : (
+                <ImageGrid imageUrls={imageUrls} />
+              )}
             </Box>
           </Stack>
           {/* Footer */}
