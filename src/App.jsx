@@ -39,19 +39,44 @@ const theme = createTheme({
 
 function App() {
   const [imageUrls, setImageUrls] = useState([]);
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleAddImage = (newUrl) => {
     console.log([...imageUrls, newUrl]);
     setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
   };
 
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8800/api");
-    console.log(response.data.fruits);
-  };
-
   useEffect(() => {
-    fetchAPI();
+    const fetchImages = async () => {
+      // If signed in, get images that have already been generated
+      try {
+        const response = await fetch(
+          "https://ai-chat-2411.onrender.com/api/store/getImage"
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch images: ${response.statusText}`);
+          console.err("Failed to fetch images: ", response.text);
+        }
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+          console.log("No images found in mongoDB.");
+          return; // Do nothing if no images
+        }
+
+        const urls = data.map((item) => item.imgUrl);
+        setImageUrls(urls);
+      } catch (error) {
+        console.error("Error loading images:", error);
+        setError(error.message);
+      } finally {
+        setLoadingImages(false); // Set loading to false once the fetch completes
+      }
+    };
+
+    fetchImages();
   }, []);
 
   return (
@@ -118,7 +143,13 @@ function App() {
               >
                 <GenerateImageButton addImgUrlFunc={handleAddImage} />
               </Box>
-              <ImageGrid imageUrls={imageUrls} />
+              {loadingImages ? (
+                <p>Loading images...</p>
+              ) : error ? (
+                <p>Error loading images: {error}</p>
+              ) : (
+                <ImageGrid imageUrls={imageUrls} />
+              )}
             </Box>
           </Stack>
           {/* Footer */}
