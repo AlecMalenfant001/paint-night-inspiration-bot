@@ -27,11 +27,6 @@ app.use(cors(corsOptions));
 // port number for this server
 const port = 8800;
 
-//create testing route for backend api
-app.get("/api", (req, res) => {
-  res.json({ fruits: ["Alec, Alex, Lili, Reagan, Troye Sivane"] });
-});
-
 // upload reference image to blob storage
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
