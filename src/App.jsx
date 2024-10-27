@@ -7,6 +7,7 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
 import {
   AppBar,
@@ -37,47 +38,66 @@ const theme = createTheme({
   },
 });
 
+export async function showImage(id) {
+  const encodedId = encodeURIComponent(id);
+  try {
+    const response = await fetch(
+      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
+    );
+    ``; //TODO : remove this
+    if (!response.ok) {
+      const error = new Error("An error occurred while fetching the image");
+      error.code = response.status;
+      error.info = await response.json();
+      throw error;
+    }
+
+    const imageData = await response.json();
+    return imageData;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    throw error;
+  }
+}
+
 function App() {
+  const { isSignedIn, user, isLoaded } = useUser();
   const [imageUrls, setImageUrls] = useState([]);
   const [loadingImages, setLoadingImages] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleAddImage = (newUrl) => {
-    console.log([...imageUrls, newUrl]);
-    setImageUrls((imageUrls) => [newUrl, ...imageUrls]);
-  };
-
   useEffect(() => {
     const fetchImages = async () => {
-      // If signed in, get images that have already been generated
-      try {
-        const response = await fetch(
-          "https://ai-chat-2411.onrender.com/api/store/getImage"
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to fetch images: ${response.statusText}`);
-          console.err("Failed to fetch images: ", response.text);
+      console.log("Checking fetch conditions...");
+      if (isLoaded && isSignedIn && user) {
+        console.log("User is signed in. Fetching images for:", user.firstName);
+        try {
+          const imageData = await showImage(user.firstName);
+
+          // Extract URLs from fetched image data
+          const fetchedUrls = imageData.map((image) => image.imgUrl);
+
+          // Combine fetched images with sample images, with fetched images first
+          setImageUrls((prevUrls) => [...fetchedUrls, ...prevUrls]);
+        } catch (error) {
+          console.error("Error loading images:", error);
+          setError(error.message);
+        } finally {
+          setLoadingImages(false);
         }
-
-        const data = await response.json();
-
-        if (data.length === 0) {
-          console.log("No images found in mongoDB.");
-          return; // Do nothing if no images
-        }
-
-        const urls = data.map((item) => item.imgUrl);
-        setImageUrls(urls);
-      } catch (error) {
-        console.error("Error loading images:", error);
-        setError(error.message);
-      } finally {
-        setLoadingImages(false); // Set loading to false once the fetch completes
+      } else {
+        // If not signed in, we can reset loading state
+        setLoadingImages(false);
       }
     };
 
     fetchImages();
-  }, []);
+  }, [isLoaded, isSignedIn, user]);
+
+  const handleAddImage = (newUrl) => {
+    // Add the new URL to the beginning of the imageUrls state
+    setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
+  };
 
   return (
     <>
