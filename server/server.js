@@ -2,6 +2,7 @@
 // to be used in the
 
 const { BlobServiceClient } = require("@azure/storage-blob");
+const axios = require("axios");
 
 // setup access to environment variables
 require("dotenv").config();
@@ -54,6 +55,40 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     res.json({ url });
   } catch (error) {
     res.status(500).send("Error uploading image to Azure: " + error.message);
+  }
+});
+
+app.post("/uploadGeneratedImage", async (req, res) => {
+  try {
+    // retrieve the connection string from the .env file
+    const AZURE_STORAGE_CONNECTION_STRING =
+      process.env.AZURE_STORAGE_CONNECTION_STRING;
+
+    // get image URL from request body
+    const imageUrl = req.body.imageUrl;
+    const fileName = imageUrl.split("/").pop();
+
+    // fetch the image data from the public URL
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    const buffer = Buffer.from(response.data, "binary");
+
+    // create a new BlobServiceClient and ContainerClient
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerClient = blobServiceClient.getContainerClient("images");
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+    // upload the image to Azure Blob Storage
+    await blockBlobClient.uploadData(buffer);
+
+    // return the URL of the uploaded image
+    const url = blockBlobClient.url;
+    res.json({ url });
+  } catch (error) {
+    res
+      .status(500)
+      .send("Error uploading generated image to Azure: " + error.message);
   }
 });
 
