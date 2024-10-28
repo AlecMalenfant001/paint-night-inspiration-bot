@@ -2,6 +2,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { React, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
+//import { head } from "../server/Routes/store";
 
 export default function GenerateImageButton({ addImgUrlFunc }) {
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,6 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     try {
       const response = await axios.get("http://localhost:8800/description");
       imgDescription = response.data.description;
-      console.log("imgDescription", imgDescription);
     } catch (error) {
       setLoading(false);
       console.error(
@@ -41,8 +41,7 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     try {
       const response = await axios.get("http://localhost:8800/prompt");
       promptString = response.data.prompt;
-      console.log(response.statusText);
-      console.log("prompt", promptString);
+      console.log("prompt", promptString); // debug
     } catch (error) {
       console.error("Error while getting prompt from server: ", error);
     }
@@ -77,9 +76,24 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
         throw new Error(`API request failed with status ${response.status}`);
       }
       const data = await response.json(); // Parse the JSON response
-      const imgUrl = data.url;
+      const generatedImgUrl = data.url;
 
-      // Try to upload to database
+      // Upload generated image to blob service for logged in uses
+      let imgUrl = "";
+      try {
+        if (!user) {
+          imgUrl = generatedImgUrl;
+        } else {
+          imgUrl = await uploadImagetoBlob(generatedImgUrl);
+        }
+      } catch (e) {
+        console.error(
+          "Error while uploading generated image to blob storage: ",
+          e
+        );
+      }
+
+      // Try to upload imgUrl to mongo database
       try {
         if (!user) {
           await uploadImageToMongo(imgUrl, promptString, "Generated Image");
@@ -121,6 +135,33 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
     } catch (error) {
       console.error("Error uploading image to mongoDB:", error);
       throw error;
+    }
+  }
+
+  async function uploadImagetoBlob(generatedImgUrl) {
+    // upload generated images to blob service
+    /* input : 
+          generatedImgUrl : string 
+        output : 
+          imgurl : string 
+    */
+    try {
+      let response = await axios.post(
+        "http://localhost:8800/uploadGeneratedImage",
+        {
+          imageUrl: generatedImgUrl,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const imgUrl = response.data.url;
+      return imgUrl;
+    } catch (e) {
+      console.error("Error uploading image to blob service", e);
     }
   }
 
