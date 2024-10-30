@@ -32,7 +32,7 @@ const theme = createTheme({
       main: purple[900],
     },
     secondary: {
-      main: "#43304a",
+      main: purple[100],
       pink: pink[300],
     },
   },
@@ -122,7 +122,11 @@ function App() {
                   Paint Night Inspiration Bot
                 </Typography>
                 <SignedOut>
-                  <SignInButton />
+                  <SignInButton asChild>
+                    <Button color="secondary" variant="contained">
+                      Sign In
+                    </Button>
+                  </SignInButton>
                 </SignedOut>
                 <SignedIn>
                   <UserButton />
