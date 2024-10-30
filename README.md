@@ -33,6 +33,7 @@ Install the needed dependencies by running these commands in the terminal :
   npm install
   npm install @google/generative-ai
   npm install @azure/cognitiveservices-computervision
+  npm install @azure-rest/ai-vision-image-analysis
   npm install async
   npm install react-slick --save
   npm install slick-carousel --save
