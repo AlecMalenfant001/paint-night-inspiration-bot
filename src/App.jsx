@@ -72,9 +72,10 @@ function App() {
     const fetchImages = async () => {
       console.log("Checking fetch conditions...");
       if (isLoaded && isSignedIn && user) {
-        console.log("User is signed in. Fetching images for:", user.firstName);
+        console.log("User is signed in. Fetching images for:", user.id);
+
         try {
-          const imageData = await showImage(user.firstName);
+          const imageData = await showImage(user.id);
 
           // Extract URLs and prompts from fetched image data
           const fetchedUrls = imageData.map((image) => image.imgUrl);
@@ -98,9 +99,10 @@ function App() {
     fetchImages();
   }, [isLoaded, isSignedIn, user]);
 
-  const handleAddImage = (newUrl) => {
+  const handleAddImage = (newUrl, newPrompt) => {
     // Add the new URL to the beginning of the imageUrls state
     setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
+    setImagePrompts((prevPrompts) => [newPrompt, ...prevPrompts]);
   };
 
   return (
