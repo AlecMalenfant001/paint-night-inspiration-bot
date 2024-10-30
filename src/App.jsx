@@ -44,7 +44,7 @@ export async function showImage(id) {
     const response = await fetch(
       `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
     );
-    ``; //TODO : remove this
+
     if (!response.ok) {
       const error = new Error("An error occurred while fetching the image");
       error.code = response.status;
@@ -53,6 +53,7 @@ export async function showImage(id) {
     }
 
     const imageData = await response.json();
+    console.log("imageData: ", imageData);
     return imageData;
   } catch (error) {
     console.error("Error fetching image:", error);
@@ -63,6 +64,7 @@ export async function showImage(id) {
 function App() {
   const { isSignedIn, user, isLoaded } = useUser();
   const [imageUrls, setImageUrls] = useState([]);
+  const [imagePrompts, setImagePrompts] = useState([]);
   const [loadingImages, setLoadingImages] = useState(true);
   const [error, setError] = useState(null);
 
@@ -74,11 +76,13 @@ function App() {
         try {
           const imageData = await showImage(user.firstName);
 
-          // Extract URLs from fetched image data
+          // Extract URLs and prompts from fetched image data
           const fetchedUrls = imageData.map((image) => image.imgUrl);
+          const fetchedPrompts = imageData.map((image) => image.prompt);
 
-          // Combine fetched images with sample images, with fetched images first
-          setImageUrls((prevUrls) => [...fetchedUrls, ...prevUrls]);
+          // Combine fetched images + prompts with sample images + prompts, with previous images first
+          setImageUrls((prevUrls) => [...prevUrls, ...fetchedUrls]);
+          setImagePrompts((prevPrompts) => [...prevPrompts, ...fetchedPrompts]);
         } catch (error) {
           console.error("Error loading images:", error);
           setError(error.message);
@@ -168,7 +172,7 @@ function App() {
               ) : error ? (
                 <p>Error loading images: {error}</p>
               ) : (
-                <ImageGrid imageUrls={imageUrls} />
+                <ImageGrid imageUrls={imageUrls} imagePrompts={imagePrompts} />
               )}
             </Box>
           </Stack>
