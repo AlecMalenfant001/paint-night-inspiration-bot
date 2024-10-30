@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Paper, Typography, Button, CircularProgress } from "@mui/material";
 import ReferenceImageFooter from "./reference-img-footer";
 import ImageDescription from "./scripts/imageDescription";
+import ImageCaptions from "./scripts/imageCaptions";
 import axios from "axios";
 
 export default function ReferenceImagePaper() {
@@ -31,28 +32,29 @@ export default function ReferenceImagePaper() {
         body: formData,
       });
       const data = await response.json();
-      console.log("Publicly accessible URL:", data.url);
+      const publicUrl = data.url;
+      console.log("Publicly accessible URL:", publicUrl);
 
       // upload image to description API
       console.log("file", file);
       if (file) {
         const reader = new FileReader();
         reader.onloadend = async () => {
-          // this second async function is for the image description
+          // Get image data
           const imageDataUrl = reader.result;
           console.log("imageDataUrl", imageDataUrl);
           setImage(imageDataUrl);
           setIsImageUploaded(true);
 
-          console.log("Public URL:", data.url); // debug
+          console.log("Public URL:", publicUrl); // debug
 
-          // Create an instance of ImageDescription with the public URL
-          const azureDescription = new ImageDescription(data.url);
-          await azureDescription.describeImage();
+          // Create an instance of ImageCaptions with the public url
+          const azureCaptions = new ImageCaptions(publicUrl);
+          await azureCaptions.captionImage();
 
           // Update state with the description and confidence
-          const descriptionText = azureDescription.getDescriptionText();
-          const confidence = azureDescription.getDescriptionConfidence() * 100;
+          const descriptionText = azureCaptions.descriptionText;
+          const confidence = azureCaptions.descriptionConfidence * 100;
           setImgDescription(descriptionText);
           setDescriptionConfidence(confidence);
 
@@ -90,6 +92,7 @@ export default function ReferenceImagePaper() {
     return null;
   }
 
+  // UI elements
   return (
     <Paper style={{ padding: 20, textAlign: "center", margin: 2 }}>
       <Typography variant="h5" gutterBottom>
