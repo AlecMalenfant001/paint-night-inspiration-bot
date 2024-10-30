@@ -144,7 +144,7 @@ app.get("/keywords", (req, res) => {
   }
 });
 
-//Prompt
+// Current Prompt
 let promptString = "";
 app.get("/prompt", (req, res) => {
   try {

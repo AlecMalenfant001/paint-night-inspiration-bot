@@ -26,7 +26,7 @@ router.post("/imageGeneration", async (req, res) => {
   }
 });
 
-// Get Stored Image
+// Get Stored Images
 router.get("/getImage", async (req, res) => {
   try {
     const images = await Image.find();
