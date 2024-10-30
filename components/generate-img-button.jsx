@@ -4,7 +4,10 @@ import { React, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 //import { head } from "../server/Routes/store";
 
-export default function GenerateImageButton({ addImgUrlFunc }) {
+export default function GenerateImageButton({
+  addImgUrlFunc,
+  addImgPromptFunc,
+}) {
   const [loading, setLoading] = useState(false);
   const { isSignedIn, user, isLoaded } = useUser();
 
@@ -96,15 +99,15 @@ export default function GenerateImageButton({ addImgUrlFunc }) {
       // Try to upload imgUrl to mongo database
       try {
         if (!user) {
-          await uploadImageToMongo(imgUrl, promptString, "Generated Image");
+          await uploadImageToMongo(imgUrl, promptString, "Anonymous");
         } else {
-          await uploadImageToMongo(imgUrl, promptString, user.firstName);
+          await uploadImageToMongo(imgUrl, promptString, user.id);
         }
       } catch (e) {
         console.error("Image not saved to mongoDB: ", prompt, error);
       }
 
-      addImgUrlFunc(imgUrl); // Return the new URL to the parent component
+      addImgUrlFunc(imgUrl, promptString); // Return the new URL to the parent component
       setLoading(false); // Set loading to false
     } catch (error) {
       console.error("Error fetching image:", error);
