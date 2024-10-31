@@ -82,7 +82,6 @@ The API keys are stored as environment variables in a ".env.local" file in the r
 If no such file exist, create that file and create value-key pairs with the following values :
 
 ```
-VITE_GEMINI_API_KEY="YOUR-KEY"
 VITE_AZURE_VISION_KEY="YOUR-KEY"
 VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
 ```
