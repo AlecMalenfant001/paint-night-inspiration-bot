@@ -29,3 +29,8 @@ dist-ssr
 
 # Misc
 *.cjs
+
+# amplify
+.amplify
+amplify_outputs*
+amplifyconfiguration*
