@@ -93,6 +93,7 @@ A connection string is used to connect to the azure storage server. Create a fil
 
 ```
 AZURE_STORAGE_CONNECTION_STRING=YourConnectionString
+MONGO_URL = mongodb+srv://Nadeem:Jaffer@cluster0.ewb4t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 ```
 
 Do not put quotes around the string or the azure server will not read it correctly
