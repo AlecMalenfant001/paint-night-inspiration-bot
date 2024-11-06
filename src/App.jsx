@@ -19,6 +19,7 @@ import {
   Stack,
   Typography,
   Toolbar,
+  CircularProgress,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { pink, purple } from "@mui/material/colors";
@@ -37,72 +38,68 @@ const theme = createTheme({
   },
 });
 
-export async function showImage(id) {
-  const encodedId = encodeURIComponent(id);
+// Fetch images based on the username
+export async function fetchImages(username) {
+  const encodedUsername = encodeURIComponent(username);
   try {
     const response = await fetch(
-      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
+      `http://localhost:5000/api/store/getImage/${encodedUsername}`
     );
-``
     if (!response.ok) {
-      const error = new Error("An error occurred while fetching the image");
-      error.code = response.status;
-      error.info = await response.json();
-      throw error;
+      throw new Error("Error fetching images");
     }
-
-    const imageData = await response.json();
-    return imageData;
+    return await response.json();
   } catch (error) {
-    console.error("Error fetching image:", error);
-    throw error;
+    console.error("Error fetching images:", error);
+    return [];
   }
 }
 
 function App() {
   const { isSignedIn, user, isLoaded } = useUser();
-  const [imageUrls, setImageUrls] = useState([
-    "basquiatMoose.png",
-    "frog2.png",
-    "Glitch.png",
-    "guillotine.png",
-    "haringMoose.png",
-  ]);
+  const [imageUrls, setImageUrls] = useState([]);
   const [loadingImages, setLoadingImages] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      console.log("Checking fetch conditions...");
-      if (isLoaded && isSignedIn && user) {
-        console.log("User is signed in. Fetching images for:", user.firstName);
-        try {
-          const imageData = await showImage(user.firstName);
-
-          // Extract URLs from fetched image data
-          const fetchedUrls = imageData.map((image) => image.imgUrl);
-
-          // Combine fetched images with sample images, with fetched images first
-          setImageUrls((prevUrls) => [...fetchedUrls, ...prevUrls]);
-        } catch (error) {
-          console.error("Error loading images:", error);
-          setError(error.message);
-        } finally {
-          setLoadingImages(false);
+  // Function to load images
+  const loadImages = async () => {
+    if (isLoaded && isSignedIn && user) {
+      try {
+        setLoadingImages(true); // Start loading
+        const images = await fetchImages(user.firstName);
+        console.log(images);
+        if (images.length > 0) {
+          const formattedImages = images.map((img) => ({
+            contentType: img.contentType,
+            imgData: img.imgData,
+            name: img.name,
+          }));
+          setImageUrls(formattedImages); // Set fetched images to state
+        } else {
+          setImageUrls([]); // Clear state if no images are found
         }
-      } else {
-        // If not signed in, we can reset loading state
-        setLoadingImages(false);
+      } catch (err) {
+        console.error("Error loading images:", err);
+        setError("Failed to load images. Please try again later.");
+      } finally {
+        setLoadingImages(false); // End loading
       }
-    };
+    } else {
+      setLoadingImages(false); // End loading if not signed in or not loaded
+    }
+  };
 
-    fetchImages();
+  useEffect(() => {
+    loadImages(); // Call loadImages when component mounts or when user state changes
   }, [isLoaded, isSignedIn, user]);
 
-  const handleAddImage = (newUrl) => {
-    // Add the new URL to the beginning of the imageUrls state
-    setImageUrls((prevUrls) => [newUrl, ...prevUrls]);
+  // Function to handle adding a new image
+  const handleAddImage = (newImage) => {
+    // Add the new image object to the beginning of the imageUrls state
+    setImageUrls((prevUrls) => [...prevUrls, newImage]);
+    loadImages();
   };
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -156,12 +153,23 @@ function App() {
                 width: "100%",
               }}
             >
-                <GenerateImageButton addImgUrlFunc={handleAddImage} />
+              <GenerateImageButton addImgUrlFunc={handleAddImage} />
             </Box>
             {loadingImages ? (
-              <p>Loading images...</p>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px", // Adjust height as needed
+                }}
+              >
+                <CircularProgress />
+              </Box>
             ) : error ? (
-              <p>Error loading images: {error}</p>
+              <Typography color="error" sx={{ textAlign: "center" }}>
+                {error}
+              </Typography>
             ) : (
               <ImageGrid imageUrls={imageUrls} />
             )}
