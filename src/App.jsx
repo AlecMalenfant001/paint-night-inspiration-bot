@@ -43,7 +43,7 @@ export async function fetchImages(username) {
   const encodedUsername = encodeURIComponent(username);
   try {
     const response = await fetch(
-      `http://localhost:5000/api/store/getImage/${encodedUsername}`
+      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedUsername}`
     );
     if (!response.ok) {
       throw new Error("Error fetching images");
