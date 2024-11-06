@@ -82,7 +82,7 @@ const fetchImageFromGetImgAI = async () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/store/imageGeneration",
+        "https://ai-chat-2411.onrender.com/api/store/imageGeneration",
         {
           method: "POST",
           body: JSON.stringify(payload),
