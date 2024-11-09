@@ -26,7 +26,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // port number for this server
-const port = 8800;
+const port = 3000;
 
 // upload reference image to blob storage
 app.post("/upload", upload.single("image"), async (req, res) => {
@@ -162,7 +162,7 @@ app.get("/prompt", (req, res) => {
 
 // Mongoose Database
 const mongoose = require("mongoose");
-const authRoute = require("./Routes/store");
+const authRoute = require("./../Routes/store");
 
 mongoose
   .connect(process.env.MONGO_URL)
