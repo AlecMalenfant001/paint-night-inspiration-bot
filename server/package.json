@@ -1,12 +1,20 @@
 {
-  "name": "server",
+  "name": "index",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD:server/package.json
   "main": "./api/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "dev": "nodemon /api/server"
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "dev": "nodemon index"
+>>>>>>> 3ded47e030a1b40c0a82955d11a5876d7b790a46:server/api/package.json
   },
   "keywords": [],
   "author": "",
