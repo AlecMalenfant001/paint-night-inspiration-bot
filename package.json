@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@azure-rest/ai-vision-image-analysis": "^1.0.0-beta.3",
+    "@azure/core-auth": "^1.9.0",
     "@azure/storage-blob": "^12.25.0",
     "@clerk/clerk-react": "^5.11.1",
     "@emotion/react": "^11.13.3",
