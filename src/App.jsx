@@ -25,6 +25,7 @@ import ImageGrid from "../components/image-grid";
 import GenerateImageButton from "../components/generate-img-button";
 import axios from "axios";
 import Footer from "../components/footer";
+import FeedbackButton from "../components/feedback-button";
 
 const theme = createTheme({
   palette: {
@@ -123,6 +124,7 @@ function App() {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                   Paint Night Inspiration Bot
                 </Typography>
+                <FeedbackButton></FeedbackButton>
                 <SignedOut>
                   <SignInButton asChild>
                     <Button color="secondary" variant="contained">
