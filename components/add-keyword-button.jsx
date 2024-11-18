@@ -1,10 +1,12 @@
+// This component contains both the button and modal for adding keywords
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, Stack, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import randomWord from "./scripts/randomWord.js";
 
 const style = {
   position: "absolute",
@@ -40,6 +42,12 @@ export default function AddKeywordButton({ addKeywordFunction }) {
     }
   };
 
+  // A function to fill the textfield with a random noun, adjective, or verb
+  const addRandom = (wordType) => {
+    setKeyword(randomWord(wordType));
+    return;
+  };
+
   return (
     <div>
       <IconButton aria-label="add" size="small" onClick={handleOpen}>
@@ -53,11 +61,11 @@ export default function AddKeywordButton({ addKeywordFunction }) {
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            Enter a phrase
+            New Text Input
           </Typography>
           <TextField
             id="keyword-input"
-            label="Custom Word or Phrase"
+            label="Word or Phrase"
             variant="outlined"
             fullWidth
             value={keyword}
@@ -69,10 +77,40 @@ export default function AddKeywordButton({ addKeywordFunction }) {
           <Button
             variant="contained"
             color="primary"
+            fullWidth
             onClick={() => handleSubmit()}
           >
             Submit
           </Button>
+          <Stack sx={{ mt: 3 }} spacing={1.5}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                addRandom("noun");
+              }}
+            >
+              Random Noun
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                addRandom("adjective");
+              }}
+            >
+              Random Adjective
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                addRandom("verb");
+              }}
+            >
+              Random Verb
+            </Button>
+          </Stack>
         </Box>
       </Modal>
     </div>
