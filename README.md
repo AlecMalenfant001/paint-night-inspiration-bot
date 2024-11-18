@@ -44,6 +44,7 @@ Install the needed dependencies by running these commands in the terminal :
   npm install @azure/storage-blob
   npm install axios
   npm install multer
+  npm install @emailjs/browser
 ```
 
 - react-slick and slick-carousel allow the program to use a slick image carousel to display generated images
@@ -51,6 +52,7 @@ Install the needed dependencies by running these commands in the terminal :
 - azure/storage-blob is used to store reference images
 - axios is an HTTP client for node.js
 - multer is middleware to help with form data
+- EmailJs is a email service for the feedback form
 
 ## /server/server.js
 
