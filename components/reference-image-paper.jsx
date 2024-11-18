@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Paper, Typography, Button, CircularProgress } from "@mui/material";
-import ReferenceImageFooter from "./reference-img-footer";
+import ReferenceImageFooter from "./reference-image-footer";
 import ImageCaptions from "./scripts/imageCaptions";
 import axios from "axios";
 
