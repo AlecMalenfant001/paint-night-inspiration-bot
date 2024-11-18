@@ -70,7 +70,7 @@ export default function ChipsArray() {
     >
       {/*Title and add button*/}
       <Typography variant="h6" align="center" gutterBottom>
-        Keywords
+        Input Text
       </Typography>
       <AddKeywordButton addKeywordFunction={handleAdd} />
 

@@ -26,9 +26,6 @@ export default function AddKeywordButton({ addKeywordFunction }) {
   const handleOpen = () => {
     setKeyword("");
     setOpen(true);
-    setTimeout(() => {
-      textFieldRef.current.focus();
-    }, 0);
   };
   const handleClose = () => setOpen(false);
   const handleKeywordChange = (event) => setKeyword(event.target.value);
@@ -56,11 +53,11 @@ export default function AddKeywordButton({ addKeywordFunction }) {
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            Enter a keyword
+            Enter a phrase
           </Typography>
           <TextField
             id="keyword-input"
-            label="Keyword"
+            label="Custom Word or Phrase"
             variant="outlined"
             fullWidth
             value={keyword}

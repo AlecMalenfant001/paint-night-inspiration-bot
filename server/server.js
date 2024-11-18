@@ -152,7 +152,7 @@ app.get("/prompt", (req, res) => {
     let labels = keywordsList.map((keyword) => keyword.label);
 
     // Concatenate imgDescription with labels
-    promptString = "A painting of " + imgDescription + " " + labels.join(" ");
+    promptString = imgDescription + " " + labels.join(" ");
     console.log("promptString: ", promptString);
     res.status(200).json({ prompt: promptString });
   } catch (error) {
