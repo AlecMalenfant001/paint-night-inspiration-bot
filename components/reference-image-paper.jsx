@@ -10,6 +10,7 @@ export default function ReferenceImagePaper() {
   );
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [imgDescription, setImgDescription] = useState("");
+  const [isFooterVisible, setisFooterVisible] = useState(true);
   const [descriptionConfidence, setDescriptionConfidence] = useState(0.0);
   const [loading, setLoading] = useState(false);
 
@@ -45,9 +46,7 @@ export default function ReferenceImagePaper() {
           setImage(imageDataUrl);
           setIsImageUploaded(true);
 
-          console.log("Public URL:", publicUrl); // debug
-
-          // Create an instance of ImageCaptions with the public url
+          // Create an instance of the ImageCaptions object with the reference image's public url
           const azureCaptions = new ImageCaptions(publicUrl);
           await azureCaptions.captionImage();
 
@@ -56,6 +55,9 @@ export default function ReferenceImagePaper() {
           const confidence = azureCaptions.descriptionConfidence * 100;
           setImgDescription(descriptionText);
           setDescriptionConfidence(confidence);
+
+          // Display the footer
+          setisFooterVisible(true);
 
           // Update server with image description to be used by genrate image button
           const response = await axios.post(
@@ -78,13 +80,38 @@ export default function ReferenceImagePaper() {
     }
   };
 
+  const removeDescription = async () => {
+    setisFooterVisible(false);
+    // Remove description string from the server
+    try {
+      const response = await axios.post(
+        "http://localhost:8800/description",
+        { description: "" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Description removed successfully");
+    } catch (error) {
+      console.error("Error removing description:", error);
+    }
+  };
+
   /* Conditionally Render the image description and description confidence */
-  function Footer({ isImageUploaded, descriptionConfidence, imgDescription }) {
-    if (isImageUploaded) {
+  function Footer({
+    isImageUploaded,
+    isFooterVisible,
+    descriptionConfidence,
+    imgDescription,
+  }) {
+    if (isFooterVisible && isImageUploaded) {
       return (
         <ReferenceImageFooter
           confidence={descriptionConfidence}
           description={imgDescription}
+          removeFunction={removeDescription}
         />
       );
     }
@@ -122,6 +149,7 @@ export default function ReferenceImagePaper() {
       <br />
       <Footer
         isImageUploaded={isImageUploaded}
+        isFooterVisible={isFooterVisible}
         descriptionConfidence={descriptionConfidence}
         imgDescription={imgDescription}
       />
