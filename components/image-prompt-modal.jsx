@@ -10,7 +10,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "80%",
+  width: { xs: "80%", sm: 400 },
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -22,9 +22,10 @@ export default function PromptModal(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const prompt = props.prompt;
+  const image = props.image;
 
   return (
-    <div>
+    <Box>
       <IconButton
         sx={{ color: "rgba(255, 255, 255, 0.54)" }}
         aria-label={`prompt`}
@@ -36,17 +37,20 @@ export default function PromptModal(props) {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Prompt
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {prompt}
           </Typography>
+          <Box sx={{ mt: 2, width: { xs: "80%", sm: 400 } }}>
+            <img
+              src={image}
+              alt={"image of " + prompt}
+              style={{ width: "100%" }}
+            />
+          </Box>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }

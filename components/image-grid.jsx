@@ -31,7 +31,9 @@ export default function ImageGrid(props) {
           <img src={imageUrl} alt={imageUrl} loading="lazy" />
           <ImageListItemBar
             title={imagePrompts[index]}
-            actionIcon={<PromptModal prompt={imagePrompts[index]} />}
+            actionIcon={
+              <PromptModal prompt={imagePrompts[index]} image={imageUrl} />
+            }
           />
         </ImageListItem>
       ))}
