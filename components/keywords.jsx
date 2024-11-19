@@ -58,6 +58,18 @@ export default function ChipsArray() {
     return chipData;
   };
 
+  // Reset keywords list when page is loaded
+  window.addEventListener("load", async (event) => {
+    try {
+      console.log("Resetting Keywords");
+      await axios.post("http://localhost:8800/keywords", {
+        keywords: [],
+      });
+    } catch (error) {
+      console.error("Error resetting keywords:", error);
+    }
+  });
+
   return (
     <Paper
       sx={{
