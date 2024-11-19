@@ -99,6 +99,26 @@ export default function ReferenceImagePaper() {
     }
   };
 
+  // Reset description when page is loaded
+  window.addEventListener("load", async (event) => {
+    console.log("Removing Description");
+    // Remove description string from the server
+    try {
+      const response = await axios.post(
+        "http://localhost:8800/description",
+        { description: "" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Description removed successfully");
+    } catch (error) {
+      console.error("Error removing description:", error);
+    }
+  });
+
   /* Conditionally Render the image description and description confidence */
   function Footer({
     isImageUploaded,
