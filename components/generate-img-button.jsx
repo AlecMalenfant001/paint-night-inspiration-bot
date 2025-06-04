@@ -29,7 +29,9 @@ export default function GenerateImageButton({
     // Get the image description from the server
     let imgDescription;
     try {
-      const response = await axios.get("http://localhost:8800/description");
+      const response = await axios.get(
+        "https://backend-paint-night-inspiration-bot.onrender.com:8800/description"
+      );
       imgDescription = response.data.description;
     } catch (error) {
       setLoading(false);
@@ -42,7 +44,9 @@ export default function GenerateImageButton({
     // Get the prompt from the server
     let promptString;
     try {
-      const response = await axios.get("http://localhost:8800/prompt");
+      const response = await axios.get(
+        "https://backend-paint-night-inspiration-bot.onrender.com:8800/prompt"
+      );
       promptString = response.data.prompt;
       console.log("prompt", promptString); // debug
     } catch (error) {
@@ -119,7 +123,7 @@ export default function GenerateImageButton({
   async function uploadImageToMongo(img, prompt, name) {
     try {
       const response = await fetch(
-        "http://localhost:8800/api/store/imageGeneration",
+        "https://backend-paint-night-inspiration-bot.onrender.com:8800/api/store/imageGeneration",
         {
           method: "POST",
           body: JSON.stringify({ imgUrl: img, prompt: prompt, name: name }),
@@ -150,7 +154,7 @@ export default function GenerateImageButton({
     */
     try {
       let response = await axios.post(
-        "http://localhost:8800/uploadGeneratedImage",
+        "https://backend-paint-night-inspiration-bot.onrender.com:8800/uploadGeneratedImage",
         {
           imageUrl: generatedImgUrl,
         },

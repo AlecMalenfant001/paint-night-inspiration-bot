@@ -21,9 +21,12 @@ export default function ChipsArray() {
       // Update keywords list on server
       const updateServer = async () => {
         try {
-          await axios.post("http://localhost:8800/keywords", {
-            keywords: updatedChips,
-          });
+          await axios.post(
+            "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+            {
+              keywords: updatedChips,
+            }
+          );
         } catch (error) {
           console.error("Error updating keywords:", error);
         }
@@ -44,9 +47,12 @@ export default function ChipsArray() {
     // Update keywords list on server
     const updateServer = async () => {
       try {
-        await axios.post("http://localhost:8800/keywords", {
-          keywords: chipData,
-        });
+        await axios.post(
+          "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+          {
+            keywords: chipData,
+          }
+        );
       } catch (error) {
         console.error("Error updating keywords:", error);
       }
@@ -62,9 +68,12 @@ export default function ChipsArray() {
   window.addEventListener("load", async (event) => {
     try {
       console.log("Resetting Keywords");
-      await axios.post("http://localhost:8800/keywords", {
-        keywords: [],
-      });
+      await axios.post(
+        "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+        {
+          keywords: [],
+        }
+      );
     } catch (error) {
       console.error("Error resetting keywords:", error);
     }
