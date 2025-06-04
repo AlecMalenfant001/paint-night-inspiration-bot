@@ -4,9 +4,23 @@ This is the server for paint-night-inspiration bot. It's repsonsibiliteis includ
 
 # Dependencies
 
-- express : server side framework
-- nodemon : automatically restarts the node application when file changes in the directory are detected
-- cors : Cross Origin Resource Sharing
+- axios // http client
+- body-parser // parse incoming request bodies
+- express // server side framework
+- mongoose // mongo db driver
+- multer // fileupload handler
+- nodemon // automatically restarts the node app when file changes in the directory are detected
+- cors // cross origin resource sharing
+
+```
+npm i axios
+npm i body-parser
+npm i express
+npm i mongoose
+npm i multer
+npm i nodemon
+npm i cors
+```
 
 # Running the server
 
