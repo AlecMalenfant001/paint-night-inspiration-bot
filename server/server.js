@@ -6,6 +6,7 @@ const axios = require("axios");
 
 // setup access to environment variables
 require("dotenv").config();
+console.log("MongoDB URL: ", process.env.MONGO_URL);
 
 // setup multer to handle file uploads
 const multer = require("multer");
@@ -16,6 +17,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.json());
+
+//middleware to log incoming requests to the backend
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
 
 // setup cross object reference
 const cors = require("cors");
@@ -162,6 +169,7 @@ app.get("/prompt", (req, res) => {
 
 // Mongoose Database
 const mongoose = require("mongoose");
+mongoose.set("debug", true); // Enable query logging
 const authRoute = require("./Routes/store");
 
 mongoose

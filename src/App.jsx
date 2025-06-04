@@ -43,7 +43,7 @@ export async function showImage(id) {
   const encodedId = encodeURIComponent(id);
   try {
     const response = await fetch(
-      `https://ai-chat-2411.onrender.com/api/store/getImage/${encodedId}`
+      `http://localhost:8800/api/store/getImage/${encodedId}`
     );
 
     if (!response.ok) {

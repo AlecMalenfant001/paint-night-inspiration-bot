@@ -54,8 +54,8 @@ export default function GenerateImageButton({
       // Getimg request body
       const body = JSON.stringify({
         prompt: promptString,
-        width: 1024,
-        height: 1024,
+        width: 768,
+        height: 768,
         output_format: "png",
         response_format: "url",
         model: "stable-diffusion-xl-v1-0",
@@ -109,8 +109,8 @@ export default function GenerateImageButton({
 
       addImgUrlFunc(imgUrl, promptString); // Return the new URL to the parent component
       setLoading(false); // Set loading to false
-    } catch (error) {
-      console.error("Error fetching image:", error);
+    } catch (e) {
+      console.error("Error fetching image:", e);
       setLoading(false); // Set loading to false
       return null; // Or handle the error differently
     }
@@ -119,7 +119,7 @@ export default function GenerateImageButton({
   async function uploadImageToMongo(img, prompt, name) {
     try {
       const response = await fetch(
-        "https://ai-chat-2411.onrender.com/api/store/imageGeneration",
+        "http://localhost:8800/api/store/imageGeneration",
         {
           method: "POST",
           body: JSON.stringify({ imgUrl: img, prompt: prompt, name: name }),

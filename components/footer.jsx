@@ -28,7 +28,7 @@ const Footer = () => {
               <Link color="inherit" href="https://alecmalenfant.com">
                 Alec Malenfant
               </Link>
-              {` | Nadeem Jaffer | Purdue University Northwest`}
+              {` | Purdue University Northwest`}
             </Typography>
           </Grid>
         </Grid>

@@ -7,8 +7,8 @@ export default function GetImgTestButton({ promptText }) {
     const url = "https://api.getimg.ai/v1/stable-diffusion-xl/text-to-image";
     const body = JSON.stringify({
       prompt: "a cat in a hat",
-      width: 1024,
-      height: 1024,
+      width: 512,
+      height: 512,
       output_format: "png",
       response_format: "url",
       model: "stable-diffusion-xl-v1-0",

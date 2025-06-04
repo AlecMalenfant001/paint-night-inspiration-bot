@@ -91,10 +91,11 @@ VITE_AZURE_VISION_ENDPOINT="YOUR-ENDPOINT"
 
 ### Back End
 
-A connection string is used to connect to the azure storage server. Create a file called '.env' and add this value :
+A connection string is used to connect to the azure storage server and MongoDB server. Create a file called '.env' and add these values :
 
 ```
 AZURE_STORAGE_CONNECTION_STRING=YourConnectionString
+MONGO_URL=yourConnectionString
 ```
 
 Do not put quotes around the string or the azure server will not read it correctly
