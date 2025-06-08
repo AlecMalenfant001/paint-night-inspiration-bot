@@ -28,7 +28,7 @@ export default function ReferenceImagePaper() {
     try {
       // upload image to Azure Blob Storage to get publicly accessible URL of uploaded image
       const response = await fetch(
-        "https://backend-paint-night-inspiration-bot.onrender.com:8800/upload",
+        "https://backend-paint-night-inspiration-bot.onrender.com/upload",
         {
           method: "POST",
           body: formData,
@@ -64,7 +64,7 @@ export default function ReferenceImagePaper() {
 
           // Update server with image description to be used by genrate image button
           const response = await axios.post(
-            "https://backend-paint-night-inspiration-bot.onrender.com:8800/description",
+            "https://backend-paint-night-inspiration-bot.onrender.com/description",
             { description: descriptionText },
             {
               headers: {
@@ -88,7 +88,7 @@ export default function ReferenceImagePaper() {
     // Remove description string from the server
     try {
       const response = await axios.post(
-        "https://backend-paint-night-inspiration-bot.onrender.com:8800/description",
+        "https://backend-paint-night-inspiration-bot.onrender.com/description",
         { description: "" },
         {
           headers: {
@@ -108,7 +108,7 @@ export default function ReferenceImagePaper() {
     // Remove description string from the server
     try {
       const response = await axios.post(
-        "https://backend-paint-night-inspiration-bot.onrender.com:8800/description",
+        "https://backend-paint-night-inspiration-bot.onrender.com/description",
         { description: "" },
         {
           headers: {

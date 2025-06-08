@@ -22,7 +22,7 @@ export default function ChipsArray() {
       const updateServer = async () => {
         try {
           await axios.post(
-            "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+            "https://backend-paint-night-inspiration-bot.onrender.com/keywords",
             {
               keywords: updatedChips,
             }
@@ -48,7 +48,7 @@ export default function ChipsArray() {
     const updateServer = async () => {
       try {
         await axios.post(
-          "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+          "https://backend-paint-night-inspiration-bot.onrender.com/keywords",
           {
             keywords: chipData,
           }
@@ -69,7 +69,7 @@ export default function ChipsArray() {
     try {
       console.log("Resetting Keywords");
       await axios.post(
-        "https://backend-paint-night-inspiration-bot.onrender.com:8800/keywords",
+        "https://backend-paint-night-inspiration-bot.onrender.com/keywords",
         {
           keywords: [],
         }

@@ -43,7 +43,7 @@ export async function showImage(id) {
   const encodedId = encodeURIComponent(id);
   try {
     const response = await fetch(
-      `https://backend-paint-night-inspiration-bot.onrender.com:8800/api/store/getImage/${encodedId}`
+      `https://backend-paint-night-inspiration-bot.onrender.com/api/store/getImage/${encodedId}`
     );
 
     if (!response.ok) {

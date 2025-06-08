@@ -8,15 +8,9 @@ const axios = require("axios");
 require("dotenv").config();
 console.log("MongoDB URL: ", process.env.MONGO_URL);
 
-// setup multer to handle file uploads
-const multer = require("multer");
-const upload = multer();
-
 // setup express app
 const express = require("express");
-const bodyParser = require("body-parser");
 const app = express();
-app.use(bodyParser.json());
 
 //middleware to log incoming requests to the backend
 app.use((req, res, next) => {
@@ -27,10 +21,18 @@ app.use((req, res, next) => {
 // setup cross object reference
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://paint-night-inspiration-bot.vercel.app",
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+// setup multer to handle file uploads
+const multer = require("multer");
+const upload = multer();
+
+// setup body parser to handle JSON requests
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 // port number for this server
 const port = 8800;
